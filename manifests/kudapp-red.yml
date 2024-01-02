@@ -75,6 +75,9 @@ kind: Service
 metadata:
   name: kudapp-red-svc
   namespace: kudapp
+  annotations:
+    traefik.ingress.kubernetes.io/service.sticky.cookie: "true"
+    traefik.ingress.kubernetes.io/service.sticky.cookie.name: LBKUDAPPRED
 spec:
   ports:
   - name: http-alt

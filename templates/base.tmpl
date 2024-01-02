@@ -35,12 +35,12 @@
   {{block "menu" .}}
   <div class="w3-bar-block">
     <a href="{{.Context}}/api/home" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Home</a>
-    <a href="{{.Context}}/api/status" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Server Status</a>
+    <a href="{{.Context}}/api/status" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Status Information</a>
     <hr>
     <a href="{{.Context}}/api/setname" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Set Appl. Name</a>
     <a href="{{.Context}}/api/setcolor" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Set Color</a>
-    <a href="{{.Context}}/api/setstatus" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Set Status Code</a>
-    <a href="{{.Context}}/api/togglestatus" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Toggle Status</a>
+    <a href="{{.Context}}/api/setstatus" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Set Response Code</a>
+    <a href="{{.Context}}/api/togglestatus" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Toggle Resp. Code</a>
     <hr>
     <a href="{{.Context}}/check" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Health check</a>
     <a href="{{.Context}}/check/healthy" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Always Healthy</a>
@@ -58,7 +58,7 @@
 {{block "header" .}}
 <header class="w3-container w3-top w3-hide-large w3-{{if .BgColor}}{{.BgColor}}{{else}}red{{end}} w3-xlarge w3-padding">
   <a href="javascript:void(0)" class="w3-button w3-{{if .BgColor}}{{.BgColor}}{{else}}red{{end}} w3-margin-right" onclick="w3_open()">☰</a>
-  <span>KuDAPP</span>
+  <span>{{if .AppName}}{{.AppName}}{{else}}KuDAPP{{end}}</span>
 </header>
 {{end}}
 
@@ -73,7 +73,7 @@
   <div class="w3-main" style="margin-left:340px;margin-right:40px">
 
     <!-- Header -->
-    <div class="w3-container" style="margin-top:80px" id="showcase">
+    <div class="w3-container" style="margin-top:45px" id="showcase">
       {{block "contentheader" .}}
       <h1 class="w3-jumbo"><b>{{.Title}}</b></h1>
       <h2 class="w3-xxlarge w3-text-{{if .BgColor}}{{.BgColor}}{{else}}red{{end}} w3-padding-top-32"><b>{{.Subtitle}}</b></h2>

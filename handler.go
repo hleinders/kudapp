@@ -48,10 +48,10 @@ func apiHelp(w http.ResponseWriter, req *http.Request) {
 }
 
 func apiStatus(w http.ResponseWriter, req *http.Request) {
-	tmpl, err := inheritBase("sections.tmpl")
+	tmpl, err := inheritBase("status.tmpl")
 	check(err, ErrTemplateParser)
 
-	statusData := newTplData("Server Status")
+	statusData := newTplData("Status Information")
 
 	tmpData, err := collectHeader(req)
 	check(err, ErrGetHeader)
