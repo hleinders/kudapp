@@ -50,7 +50,11 @@ Additionally, any static file (e.g. "foo.html") inside the document root (defaul
 
 If you have the need to debug or examine cpu limit settings or testing the configuration of monitoring or metrics, KuDAPP provides a dummy system load generator. Behind the scenes, each worker produces very, very big fibonacci numbers and forgets it right away. This is of course completely pointless, but this way each worker produces a [CPU load](https://docs.kernel.org/admin-guide/cpu-load.html) close to 100%. This should be noticeable on the node and in the cluster metrics. 
 
-When using this feature, please make sure that you use an ingress with *session stickiness* or have only one instance configured for an URL. When your ingress uses e.g. *round robin* on its balancer pool, it is difficult to operate the workout, because the api call on /api/workout needs some form actions on itself. This is nearly impossible without sticky sessions.   
+When using this feature, please make sure that you use an ingress with *session stickiness* or have only one instance configured for an URL. When your ingress uses e.g. *round robin* on its balancer pool, it is difficult to operate the workout, because the API call on /api/workout needs some form actions on itself. This is nearly impossible without sticky sessions. Of course, you can use direct connections here, e.g. with 
+
+```shell
+$ kubectl port-forward pods/'pod-name' 9090:8080
+```
 
 **Please be very careful with this!** 
 
