@@ -15,7 +15,7 @@ After start up, an instance provides the following URLs (with optional prefix):
 - **Startpage: \[/prefix\]/api/home**
   Displays the startpage with a short information summary
   
-- **Server Status: \[/prefix\]/api/status**
+- **Status Information: \[/prefix\]/api/status**
   Get some information as seen from 'inside'. This includes all request headers, some system information and all environment variables in the running container
   
 - **Set Appl. Name:  \[/prefix\]/api/setname**
@@ -23,10 +23,10 @@ After start up, an instance provides the following URLs (with optional prefix):
   
 - **Set Color:  \[/prefix\]/api/setcolor**
   Play with background colors. This may help to distinguish several instances in a pool or backend
-- **Set Status Code: \[/prefix\]/api/setstatus**
+- **Set Response Code: \[/prefix\]/api/setstatus**
   Set the HTTP response status code to a certain value. This is the value returned by the /check URL
   
-- **Toggle Status: \[/prefix\]/api/togglestatus**
+- **Toggle Resp. Code: \[/prefix\]/api/togglestatus**
   Switch the response status code between 200 and 500. This is a shortcut for setting an individual value
   
 - **Health Check: \[/prefix\]/check**
