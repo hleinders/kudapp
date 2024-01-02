@@ -1,4 +1,4 @@
-# **<u>Ku</u>bernetes <u>D</u>emo <u>App</u>lication: KuDAPP**
+# **<u>Ku</u>be <u>D</u>emo <u>App</u>lication: KuDAPP**
 
 ### Short Introduction
 
@@ -6,7 +6,7 @@ This is a little demo application for Kubernetes and Docker environments. It is 
 
 KuDAPP is heavily inspired by **KUARD** - the [**Demo application for "Kubernetes Up and Running**](https://github.com/kubernetes-up-and-running/kuard). Of course, the original KUARD has a ton of additional features, but there is one feature I have always missed: the ability to set an arbitrary context path prefix like /foo/bar/home or /extra/context/home, so a demo application can be mounted on the sub path of an ingress without tinkering with request or response headers. That's why I started to write my own 'KUARD'. 
 
-![Kubernetes Demo Application](resources/img/kudapp.png)
+![Kube Demo Application](resources/img/kudapp.png)
 
 ### Features:
 

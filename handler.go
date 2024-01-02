@@ -27,7 +27,7 @@ func apiHome(w http.ResponseWriter, req *http.Request) {
 	home, err := inheritBase("home.tmpl")
 	check(err, ErrTemplateParser)
 
-	statusData := newTplData("Kubernetes Demo Application")
+	statusData := newTplData("Kube Demo Application")
 	statusData.Subtitle = "Overview"
 
 	tmpData, err := collectHome(req)
@@ -41,7 +41,7 @@ func apiHelp(w http.ResponseWriter, req *http.Request) {
 	help, err := inheritBase("help.tmpl")
 	check(err, ErrTemplateParser)
 
-	statusData := newTplData("Kubernetes Demo Application: KuDAPP")
+	statusData := newTplData("Kube Demo Application: KuDAPP")
 	statusData.Subtitle = "Short Introduction"
 
 	help.Execute(w, statusData)
