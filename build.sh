@@ -27,7 +27,6 @@ then
     for t in latest red blue green
     do
         docker tag kudapp:$t ${PREFIX}kudapp:$t
-        docker push ${PREFIX}kudapp:$t
     done
 fi
 
