@@ -52,7 +52,7 @@ If you have the need to debug or examine cpu limit settings or testing the confi
 
 When using this feature, please make sure that you use an ingress with *session stickiness* or have only one instance configured for an URL. When your ingress uses e.g. *round robin* on its balancer pool, it is difficult to operate the workout, because the api call on /api/workout needs some form actions on itself. This is nearly impossible without sticky sessions.   
 
-**Please Be very careful with this!** 
+**Please be very careful with this!** 
 
 This really is a debugging and testing feature. If you run your container workloads somewhere other than on your development system, **there really is the chance that this will generate costs!** Therefore, the running time of the workers is limited to 5 minutes.  
 
