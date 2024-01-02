@@ -1,0 +1,30 @@
+{{block "content" .}}
+{{ $BGC := .BgColor }}
+<!-- !PAGE CONTENT! -->
+<div class="w3-main" style="margin-left:340px;margin-right:40px">
+  <!-- Header -->
+  <div class="w3-container" style="margin-top:80px" id="showcase">
+    <h1 class="w3-jumbo"><b>{{if .Title}}{{.Title}}{{else}}Section List{{end}}</b></h1>
+    
+    {{if .Sections}}
+      {{ range .Sections }}
+        <section>
+        <h2 class="w3-xxlarge w3-text-{{if $BGC}}{{$BGC}}{{else}}red{{end}} w3-padding-top-32"><b>{{.Name}}</b></h2>
+        <hr style="width:50px;border:5px solid {{if $BGC}}{{$BGC}}{{else}}red{{end}}" class="w3-round">
+        <table class="w3-table">
+          {{ range .Entries }}
+          <tr>
+            <td style="white-space: nowrap;"><strong>{{.Key}}</strong></td>
+            <td style="word-break: break-all;">{{.Value}}</td>
+          </tr>
+          {{end}}
+        </table>
+        </section>
+      {{end}}
+    {{end}}
+
+  </div>
+
+<!-- End page content -->
+</div>
+{{end}}

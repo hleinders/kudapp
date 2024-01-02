@@ -1,0 +1,7 @@
+http:
+  routers:
+    api:
+      rule: (PathPrefix(`/api`) || PathPrefix(`/dashboard`))
+      service: api@internal
+      entrypoints:
+        - http80

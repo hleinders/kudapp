@@ -1,0 +1,42 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kudapp-ingress
+  namespace: kudapp
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: kudapp.k3s.denk.werk
+    http:
+      paths:
+      - backend:
+          service:
+            name: kudapp-red-svc
+            port:
+              number: 8080
+        path: /red
+        pathType: Prefix
+      - backend:
+          service:
+            name: kudapp-blue-svc
+            port:
+              number: 8080
+        path: /blue
+        pathType: Prefix
+      - backend:
+          service:
+            name: kudapp-green-svc
+            port:
+              number: 8080
+        path: /green
+        pathType: Prefix
+      - backend:
+          service:
+            name: kudapp-nginx-svc
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - kudapp.k3s.denk.werk

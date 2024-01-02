@@ -1,0 +1,12 @@
+{{block "contentdata" .}}
+{{ $BGC := .BgColor }}
+{{ $CTX := .Context }}
+<form action="{{ $CTX }}/api/kill" method="post">
+  <div class="w3-section w3-padding-16" style="width:20em">
+    <h3>Really kill this container?</h3>
+    Please keep in mind, that this doen't kill the pod. Only this container will be recreated.
+  </div>
+  <button type="submit" name="ButtonPressed" value="Submit" class="w3-button w3-block w3-round-large w3-padding-large w3-{{if .BgColor}}{{.BgColor}}{{else}}red{{end}} w3-margin-bottom" style="width:20em">Kill container</button>
+  <button type="submit" name="ButtonPressed" value="Cancel" class="w3-button w3-block w3-round-large w3-padding-large w3-grey w3-margin-bottom" style="width:20em">Cancel</button>
+</form>
+{{end}}

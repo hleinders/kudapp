@@ -1,0 +1,105 @@
+<!-- Content -->
+{{block "contentdata" .}}
+{{ $BGC := .BgColor }}
+{{ $CTX := .Context }}
+{{ $APN := .AppName }}
+
+    <p class="w3-text">
+        <img src="/img/kudapp_logo_small.png" alt="KuDAPP Logo" style="float:right;width:220px;margin-left:32px;">
+        This is a little demo application for Kubernetes or Docker environments. 
+        It is intended for testing, debugging and learning about elements like services, 
+        ingresses, limits and health checks. Of course, the original KUARD has a ton of 
+        additional features, but there's one feature I've always missed: 
+        the ability to set an arbitrary context path prefix like /foo/bar/home or /extra/context/home, 
+        so a demo application can be mounted on an ingress' sub path without tinkering on request or 
+        response headers. That's why I started to write my own 'KUARD'.
+    </p>
+
+    <h4>Features:</h4>
+    <p>
+        After start up, an instance provides the following URLs (with optional prefix):
+        <dl>
+            <dt class="w3-large">Startpage: [/prefix]/api/home</dt>
+            <dd>Displays the startpage with a short information summary</dd>
+            <dt class="w3-large">Server Status: [/prefix]/api/status</dt>
+            <dd>Get some information as seen from 'inside'. This includes all request headers, some system information and all
+            environment variables in the running container </dd>
+            <dt class="w3-large">Set Appl. Name: [/prefix]/api/setname</dt>
+            <dd>Change the application name.</dd>
+            <dt class="w3-large">Set Color: [/prefix]/api/setcolor</dt>
+            <dd>Play with background colors. This may help to distinguish several instances in an pool or a backend</dd>
+            <dt class="w3-large">Set Status Code: [/prefix]/api/setstatus</dt>
+            <dd>Set the http response status code to a certain value. This is the value returned by the /check URL</dd>
+            <dt class="w3-large">Toggle Status: [/prefix]/api/setstatus</dt>
+            <dd>Switch the response status code between 200 and 500. This is a shortcut for setting an individual value</dd>
+            <dt class="w3-large">Health Check: [/prefix]/check</dt>
+            <dd>Get the current response status code (default: 200). Can be set with "Set Status Code" (see above)</dd>
+            <dt class="w3-large">Always Healthy: [/prefix]/check/healthy</dt>
+            <dd>Always return a response status code of 200</dd>
+            <dt class="w3-large">Always Unhealthy: [/prefix]/check/unhealthy</dt>
+            <dd>Always return a response status code of 500</dd>
+            <dt class="w3-large">Workout: [/prefix]/api/workout</dt>
+            <dd>Starts and stops the dummy workout to produce system load</dd>
+            <dt class="w3-large">Kill Container: [/prefix]/api/kill</dt>
+            <dd>Kills the process (and therefore the container) immediately</dd>
+        </dl>
+    </p>
+
+    <h2 style="padding-top:16px">Runtime configuration</h2>
+    <h4 class="w3-padding-16">Environment Variables and Command Line Options:</h4>
+    <p>
+        The application reads some settings from the environment, command line options or a 
+        configuration file. The default variable prefix is "KUDAPP". 
+        This can be changed to another value by the command line option <code>--env-prefix prefix</code> 
+        or the configuration setting <code>EnvironmentPrefix: prefix</code> in a configuration file. 
+    </p>
+    <p>
+        For a full list of command line options, e.g. with docker, run: 
+        "<code>docker run -it --rm 'IMAGE:TAG' --help</code>". 
+    </p>
+    <p style="padding-top:10px">
+        <b>The most important environment vars | command line options are:</b>
+        <dl>
+        ServerPort
+            <dt class="w3-large">KUDAPP_SERVERPORT | <code>-p, --port port</code>:</dt>
+            <dd>Sets the listening port to `port` (default: 8080)</dd>
+            <dt class="w3-large">KUDAPP_DEFAULTCOLOR | <code>--default-color string</code>:</dt>
+            <dd>Sets the background color of the application (default: red)</dd>
+            <dt class="w3-large">KUDAPP_CONTEXTPREFIX | <code>--context prefix</code>:</dt>
+            <dd>Sets a context prefix. If set to "/foo", all links are modified with this prefix, e.g. 
+            from "/api/home/" to "/foo/api/home"</dd>
+            <dt class="w3-large">KUDAPP_APPLICATIONNAME | <code>-N, --app-name name</code>:</dt>
+            <dd>Sets the application name. Default: "KuDAPP"</dd>
+            <dt class="w3-large">KUDAPP_TEMPLATEDIR | <code>-T, --template-dir path</code>:</dt>
+            <dd>Set the template directory to "path". Default: ./templates</dd>
+            <dt class="w3-large">KUDAPP_DOCUMENTROOT | <code>-D, --document-root path</code>:</dt>
+            <dd>Set the document root to "path". Default: ./html</dd>
+            <dt class="w3-large">KUDAPP_CREATEINDEX | <code>--create-index</code>:</dt>
+            <dd>If set, the app creates a simple index file to redirect from the context url "/context" to the 
+            start page "/context/api/home" at startup</dd>
+            <dt class="w3-large">KUDAPP_VERBOSE | <code>-v, --verbose</code>:</dt>
+            <dd>Enables a more verbose logging to stdout</dd>
+        </dl>
+    </p>
+
+    <h4 class="w3-padding-16">Example Configuration File (YAML):</h4>
+    <p>
+    <code>
+        AsciiMode: false<br>
+        Verbose: false<br>
+        CreateIndex: false<br>
+        NoColor: false<br>
+        ApplicationName: KuDAPP<br>
+        ContextPrefix: /<br>
+        DefaultColor: red<br>
+        EnvironmentPrefix: KUDAPP<br>
+        ServerPort: "8080"<br>
+        DocumentRoot: ./html<br>
+        TemplateDir: ./templates
+    </code>
+    </p>
+    <p>
+        The default locations for the configuration file are displayed with "--help" 
+        (see above). In the prebuild image, "/opt/kudapp/config.yml" is a good choice. 
+    </p>
+{{end}}

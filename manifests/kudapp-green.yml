@@ -1,0 +1,85 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kudapp-green
+  namespace: kudapp
+  labels:
+    app: kdagreen
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+        app: kdagreen
+  template:
+    metadata:
+      name: kudapp-green
+      namespace: kudapp
+      labels:
+        app: kdagreen
+        app.kubernetes.io/name: kudapp-green
+    spec:
+      imagePullSecrets: 
+        - name: registry-credentials
+      containers:
+        - image: gitlab.test.dwinternal.com:5050/hleinders/kudapp:latest
+          name: kudapp-green
+          imagePullPolicy: Always
+          env:
+          - name: KUDAPP_DEFAULTCOLOR
+            value: "green"
+          - name: KUDAPP_CONTEXTPREFIX
+            value: "green"
+          - name: KUDAPP_APPLICATIONNAME
+            value: "Green KuDAPP"
+          - name: KUDAPP_CREATEINDEX
+            value: "1"
+          - name: "TZ"
+            value: "Europe/Berlin"
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /green/check
+              port: http
+              scheme: HTTP
+            failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          readinessProbe:
+            httpGet:
+              path: /green/api/home
+              port: http
+              scheme: HTTP
+            failureThreshold: 3
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            requests:
+              cpu: "256m"
+              memory: "128Mi"
+            limits:
+              cpu: "512m"
+              memory: "256Mi"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kudapp-green-svc
+  namespace: kudapp
+spec:
+  ports:
+  - name: http-alt
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app.kubernetes.io/name: kudapp-green
+    app: kdagreen
+  type: ClusterIP

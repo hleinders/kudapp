@@ -1,0 +1,42 @@
+{{block "contentdata" .}}
+
+{{ $BGC := .BgColor }}
+{{ $CTX := .Context }}
+{{ $STS := .ExtraData.WorkoutRunning }}
+{{ $CUR := .ExtraData.CurWorkers }}
+
+<p>
+  Please set the number of workers (default: {{$CUR}}, max: {{ .ExtraData.MaxWorkers }}) and start them.
+</p>
+<p>
+  <strong>Be careful: This may cause costs!</strong>
+</p>
+<p>
+  For this reason, the workloads will never run for longer than {{ .ExtraData.CurWorkers }} minutes.
+  After this time period, they will be stopped automatically. Each worker generates approximately a 
+  system load of 1.
+</p>
+<form action="{{ $CTX }}/api/workout" method="post">
+  <div class="w3-section" style="width:20em">
+    {{ if $STS }}
+      <div class="w3-panel w3-border w3-round-large w3-light-grey">
+        <p class="w3-large"><strong>current active workers: {{ $CUR }}</strong></p>
+      </div> 
+    {{ else }}
+      <label>Number of workers:</label>
+      <select class="w3-select w3-border w3-round-large w3-padding" name="NewCurrent">
+        <option value="" disabled selected>Set worker count</option>
+        {{ range .ExtraData.Workers }}
+          <option value="{{.}}" {{if eq $CUR .}}selected{{end}}>{{.}}</option>
+        {{end}}
+      </select>
+    {{end}}
+  </div>
+  {{ if $STS }}
+    <button type="submit" name="ButtonPressed" value="SubmitStop" class="w3-button w3-block w3-round-large w3-padding-large w3-{{if .BgColor}}{{.BgColor}}{{else}}red{{end}} w3-margin-bottom" style="width:20em"> Stop Workout</button>
+  {{else}}
+    <button type="submit" name="ButtonPressed" value="SubmitStart" class="w3-button w3-block w3-round-large w3-padding-large w3-{{if .BgColor}}{{.BgColor}}{{else}}red{{end}} w3-margin-bottom" style="width:20em"> Start Workout</button>
+  {{end}}
+  <button type="submit" name="ButtonPressed" value="Cancel" class="w3-button w3-block w3-round-large w3-padding-large w3-grey w3-margin-bottom" style="width:20em">Cancel</button>
+</form>
+{{end}}

@@ -1,0 +1,6 @@
+<!-- Header -->
+{{block "contentheader" .}}
+<h1 class="w3-jumbo"><b>{{.Title}}</b></h1>
+<h2 class="w3-xxlarge w3-text-{{if .BgColor}}{{.BgColor}}{{else}}red{{end}} w3-padding-top-32"><b>{{.Subtitle}}</b></h2>
+<hr style="width:50px;border:5px solid {{if .BgColor}}{{.BgColor}}{{else}}red{{end}}" class="w3-round">
+{{end}}

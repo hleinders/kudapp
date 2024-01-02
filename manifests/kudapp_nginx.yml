@@ -1,0 +1,65 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kudapp-nginx
+  namespace: kudapp
+  labels:
+    app.kubernetes.io/name: nginx
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: nginx
+  template:
+    metadata:
+      name: kudapp-nginx
+      namespace: kudapp
+      labels:
+        app.kubernetes.io/name: nginx
+    spec:
+      imagePullSecrets: 
+        - name: registry-credentials
+      containers:
+        - name: nginx
+          image: "gitlab.test.dwinternal.com:5050/hleinders/kudapp/kda-nginx:latest"
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          env:
+            - name: TZ
+              value: "Europe/Berlin"
+          resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kudapp-nginx-svc
+  namespace: kudapp
+  labels:
+    app.kubernetes.io/name: kudapp-nginx-svc
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: nginx

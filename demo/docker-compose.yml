@@ -1,0 +1,152 @@
+version: '3'
+
+name: "kudapp"
+
+networks:
+  kudapp:
+    driver: bridge
+    name: kudapp_network
+
+services:
+  traefik:
+    privileged: true
+    # The official v2 Traefik docker image
+    image: traefik:v2.10
+
+    # Enables the web UI and tells Traefik to listen to docker
+    command: --api.insecure=true --providers.docker
+    labels:
+      # reckon myself because exposedByDefault is false.
+      - traefik.enable=true
+
+      # Create global Middlewares (filter) here
+      # Redirect ^/$ to Startpage
+      - traefik.http.middlewares.redir_ctx.redirectregex.regex=^((?:https?:\/\/)?[^\/]+)?\/(red|blue|green)\/?$
+      - traefik.http.middlewares.redir_ctx.redirectregex.replacement=$${1}/$${2}/api/home
+    environment:
+      - TZ="Europe/Berlin"
+      - DOCKER_OPTS="--log-opt max-size=5m"
+    ports:
+      # The HTTP port
+      - "80:80"
+      # - "443:443"
+    networks:
+      - kudapp
+    volumes:
+      # Make sure that Traefik can listen to the Docker events
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /etc/localtime:/etc/localtime:ro
+      - ./conf/traefik.yml:/traefik.yml:ro
+      - ./conf/traefik_dynamic.yml:/traefik_dynamic.yml:ro
+      # - ./ssl:/ssl:ro
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+    restart: unless-stopped
+
+  red:
+    image: kudapp:red
+    depends_on:
+      - traefik
+    labels:
+      - traefik.enable=true
+      # Create routers:
+      - traefik.http.routers.red_http.entrypoints=http80
+      # create routing rules (match):
+      - traefik.http.routers.red_http.rule=PathPrefix(`/red`)
+      # use redirect to home page
+      - traefik.http.routers.red_http.middlewares=redir_ctx
+      # create service:
+      - traefik.http.routers.red_http.service=red_srvc
+      # create backend
+      - traefik.http.services.red_srvc.loadbalancer.server.port=8080
+    environment:
+      - TZ="Europe/Berlin"
+      - DOCKER_OPTS="--log-opt max-size=5m"
+      - KUDAPP_VERBOSE=1
+      - KUDAPP_DEFAULTCOLOR="red"
+      - KUDAPP_CONTEXTPREFIX="red"
+      - KUDAPP_APPLICATIONNAME="Red KuDAPP"
+    networks:
+      - kudapp
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+    restart: unless-stopped
+
+  blue:
+    image: kudapp:blue
+    depends_on:
+      - traefik
+    labels:
+      - traefik.enable=true
+      # Create routers:
+      - traefik.http.routers.blue_http.entrypoints=http80
+      # create routing rules (match):
+      - traefik.http.routers.blue_http.rule=PathPrefix(`/blue`)
+      # use redirect to home page
+      - traefik.http.routers.blue_http.middlewares=redir_ctx
+      # create service:
+      - traefik.http.routers.blue_http.service=blue_srvc
+      # create backend
+      - traefik.http.services.blue_srvc.loadbalancer.server.port=8080
+    environment:
+      - TZ="Europe/Berlin"
+      - DOCKER_OPTS="--log-opt max-size=5m"
+      - KUDAPP_VERBOSE=1
+      - KUDAPP_DEFAULTCOLOR="blue"
+      - KUDAPP_CONTEXTPREFIX="blue"
+      - KUDAPP_APPLICATIONNAME="Blue KuDAPP"
+    networks:
+      - kudapp
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+    restart: unless-stopped
+
+  green:
+    image: kudapp:green
+    depends_on:
+      - traefik
+    labels:
+      - traefik.enable=true
+      # Create routers:
+      - traefik.http.routers.green_http.entrypoints=http80
+      # create routing rules (match):
+      - traefik.http.routers.green_http.rule=PathPrefix(`/green`)
+      # use redirect to home page
+      - traefik.http.routers.green_http.middlewares=redir_ctx
+      # create service:
+      - traefik.http.routers.green_http.service=green_srvc
+      # create backend
+      - traefik.http.services.green_srvc.loadbalancer.server.port=8080
+    environment:
+      - TZ="Europe/Berlin"
+      - DOCKER_OPTS="--log-opt max-size=5m"
+      - KUDAPP_VERBOSE=1
+      - KUDAPP_DEFAULTCOLOR="green"
+      - KUDAPP_CONTEXTPREFIX="green"
+      - KUDAPP_APPLICATIONNAME="Green KuDAPP"
+    networks:
+      - kudapp
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+    restart: unless-stopped

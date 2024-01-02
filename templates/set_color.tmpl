@@ -1,0 +1,26 @@
+<!-- Header -->
+{{block "contentheader" .}}
+<h1 class="w3-jumbo"><b>{{.Title}}</b></h1>
+<h2 class="w3-xxlarge w3-text-{{if .BgColor}}{{.BgColor}}{{else}}red{{end}} w3-padding-top-32"><b>{{.Subtitle}}</b></h2>
+<hr style="width:50px;border:5px solid {{if .BgColor}}{{.BgColor}}{{else}}red{{end}}" class="w3-round">
+{{end}}
+
+{{block "contentdata" .}}
+{{ $BGC := .BgColor }}
+{{ $CTX := .Context }}
+
+<p>Please select the new background color.</p>
+<form action="{{ $CTX }}/api/setcolor" method="post">
+  <div class="w3-section" style="width:20em">
+    <label>New Color:</label>
+    <select class="w3-select w3-border w3-round-large w3-padding" name="NewColor">
+      <option value="" disabled selected>Choose your color</option>
+      {{ range .Colors }}
+        <option value="{{.}}" {{if eq $BGC .}}selected{{end}}>{{.}}</option>
+      {{end}}
+    </select>
+  </div>
+  <button type="submit" name="ButtonPressed" value="Submit" class="w3-button w3-block w3-round-large w3-padding-large w3-{{if .BgColor}}{{.BgColor}}{{else}}red{{end}} w3-margin-bottom" style="width:20em">Set color</button>
+  <button type="submit" name="ButtonPressed" value="Cancel" class="w3-button w3-block w3-round-large w3-padding-large w3-grey w3-margin-bottom" style="width:20em">Cancel</button>
+</form>
+{{end}}

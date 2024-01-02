@@ -1,0 +1,85 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kudapp-blue
+  namespace: kudapp
+  labels:
+    app: kdablue
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+        app: kdablue
+  template:
+    metadata:
+      name: kudapp-blue
+      namespace: kudapp
+      labels:
+        app: kdablue
+        app.kubernetes.io/name: kudapp-blue
+    spec:
+      imagePullSecrets: 
+        - name: registry-credentials
+      containers:
+        - image: gitlab.test.dwinternal.com:5050/hleinders/kudapp:latest
+          name: kudapp-blue
+          imagePullPolicy: Always
+          env:
+          - name: KUDAPP_DEFAULTCOLOR
+            value: "blue"
+          - name: KUDAPP_CONTEXTPREFIX
+            value: "blue"
+          - name: KUDAPP_APPLICATIONNAME
+            value: "Blue KuDAPP"
+          - name: KUDAPP_CREATEINDEX
+            value: "1"
+          - name: "TZ"
+            value: "Europe/Berlin"
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /blue/check
+              port: http
+              scheme: HTTP
+            failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          readinessProbe:
+            httpGet:
+              path: /blue/api/home
+              port: http
+              scheme: HTTP
+            failureThreshold: 3
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            requests:
+              cpu: "256m"
+              memory: "128Mi"
+            limits:
+              cpu: "512m"
+              memory: "256Mi"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kudapp-blue-svc
+  namespace: kudapp
+spec:
+  ports:
+  - name: http-alt
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app.kubernetes.io/name: kudapp-blue
+    app: kdablue
+  type: ClusterIP

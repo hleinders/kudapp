@@ -1,0 +1,87 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kudapp-red
+  namespace: kudapp
+  labels:
+    app: kdared
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+        app: kdared
+  template:
+    metadata:
+      name: kudapp-red
+      namespace: kudapp
+      labels:
+        app: kdared
+        app.kubernetes.io/name: kudapp-red
+    spec:
+      imagePullSecrets: 
+        - name: registry-credentials
+      containers:
+        - image: gitlab.test.dwinternal.com:5050/hleinders/kudapp:latest
+          name: kudapp-red
+          imagePullPolicy: Always
+          env:
+          - name: KUDAPP_DEFAULTCOLOR
+            value: "red"
+          - name: KUDAPP_CONTEXTPREFIX
+            value: "red"
+          - name: KUDAPP_APPLICATIONNAME
+            value: "Red KuDAPP"
+          - name: KUDAPP_CREATEINDEX
+            value: "1"
+          - name: KUDAPP_VERBOSE
+            value: "1"
+          - name: "TZ"
+            value: "Europe/Berlin"
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /red/check
+              port: http
+              scheme: HTTP
+            failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          readinessProbe:
+            httpGet:
+              path: /red/api/home
+              port: http
+              scheme: HTTP
+            failureThreshold: 3
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            requests:
+              cpu: "256m"
+              memory: "128Mi"
+            limits:
+              cpu: "512m"
+              memory: "256Mi"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kudapp-red-svc
+  namespace: kudapp
+spec:
+  ports:
+  - name: http-alt
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app.kubernetes.io/name: kudapp-red
+    app: kdared
+  type: ClusterIP

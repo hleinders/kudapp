@@ -1,0 +1,29 @@
+<!-- Header -->
+{{block "contentheader" .}}
+<h1 class="w3-jumbo"><b>{{.Title}}</b></h1>
+{{end}}
+
+<!-- Content -->
+{{block "contentdata" .}}
+{{ $BGC := .BgColor }}
+{{ $CTX := .Context }}
+{{ $APN := .AppName }}
+
+  {{if .Sections}}
+    {{ range .Sections }}
+      <section>
+      <h2 class="w3-xxlarge w3-text-{{if $BGC}}{{$BGC}}{{else}}red{{end}} w3-padding-top-32"><b>{{.Name}}</b></h2>
+      <hr style="width:50px;border:5px solid {{if $BGC}}{{$BGC}}{{else}}red{{end}}" class="w3-round">
+      <table class="w3-table">
+        {{ range .Entries }}
+        <tr>
+          <td style="white-space: nowrap;"><strong>{{.Key}}</strong></td>
+          <td style="word-break: break-all;">{{.Value}}</td>
+        </tr>
+        {{end}}
+      </table>
+      </section>
+    {{end}}
+  {{end}}
+
+{{end}}
