@@ -111,10 +111,10 @@ func apiSetStatus(w http.ResponseWriter, req *http.Request) {
 	tmpl, err := inheritBase("set_status.tmpl")
 	check(err, ErrTemplateParser)
 
-	statusData := newTplData("Set Status Code")
+	statusData := newTplData("Set Response Code")
 
 	if req.Method == "GET" {
-		statusData.Subtitle = fmt.Sprintf("Current Response Status: %d", globalStatusCode)
+		statusData.Subtitle = fmt.Sprintf("Current Response Code: %d", globalStatusCode)
 		tmpl.Execute(w, statusData)
 		return
 	} else if req.Method == "POST" {
@@ -144,7 +144,7 @@ func apiSetStatus(w http.ResponseWriter, req *http.Request) {
 
 		// all ok, use it:
 		globalStatusCode = uint(rcode)
-		statusData.Subtitle = fmt.Sprintf("Current Response Status: %d", globalStatusCode)
+		statusData.Subtitle = fmt.Sprintf("Current Response Code: %d", globalStatusCode)
 		tmpl.Execute(w, statusData)
 		return
 	}
