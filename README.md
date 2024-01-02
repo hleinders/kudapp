@@ -182,7 +182,7 @@ The images are created with the KuDAPP executable as ENTRYPOINT, so all argument
 
 ```shell
 $ docker run -it --rm 'IMAGE:TAG' --help
-$ docker run -d --rm 'IMAGE:TAG' --verbose --context "/foo/bar"
+$ docker run -d --rm -p 8080:8080 'IMAGE:TAG' --verbose --context "/foo/bar"
 ```
 
 
@@ -194,7 +194,13 @@ You can use the executable directly, as described above, or in any environment u
 
 #### Local demo (docker)
 
-To set up a local demo using docker, please compile and build the images to your local docker registry and then change your location to "demo", where you find a usable **docker-compose.yml**.
+Starting the application is as simple as
+
+```shell
+$ docker run -d --rm -p 8080:8080 'IMAGE:TAG'
+```
+
+To set up a larger local demo using docker, please compile and build the images to your local docker registry and then change your location to "demo", where you find a usable **docker-compose.yml**.
 
 This creates a docker stack containing three demo instances "red", "green" and "blue" and an ingress  ([Traefik](https://traefik.io/traefik/)), running on port 80.  A working *docker compose* is required, either as single executable or as docker plugin.
 
