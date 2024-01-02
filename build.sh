@@ -15,13 +15,21 @@ errf() {
 [[ -x ${TMPL} ]] || errf "Template dir ${TMPL} not found. Please change location" 1
 
 
-[[ -n "${CONTAINER_REGISTRY}" ]] && PREFIX="${CONTAINER_REGISTRY}/"
+docker build . -t kudapp:latest
+docker build . -t kudapp:red --build-arg DEAFULT_COLOR=red
+docker build . -t kudapp:blue --build-arg DEAFULT_COLOR=blue
+docker build . -t kudapp:green --build-arg DEAFULT_COLOR=green
 
-docker build . -t ${PREFIX}kudapp:red --build-arg DEAFULT_COLOR=red
-docker build . -t ${PREFIX}kudapp:blue --build-arg DEAFULT_COLOR=blue
-docker build . -t ${PREFIX}kudapp:green --build-arg DEAFULT_COLOR=green
+if [[ -n "${CONTAINER_REGISTRY}" ]]
+then
+    PREFIX="${CONTAINER_REGISTRY}/"
 
-docker tag ${PREFIX}kudapp:red ${PREFIX}kudapp:latest
+    for t in latest red blue green
+    do
+        docker tag kudapp:$t ${PREFIX}kudapp:$t
+        docker push ${PREFIX}kudapp:$t
+    done
+fi
 
 cat <<EOM
 
