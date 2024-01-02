@@ -33,8 +33,6 @@ func fibonacci(id int) {
 		a, b = b, a
 	}
 
-	// add result
-	chResult <- true
 	prVerboseInfo("Workload #%d: Finished Fibonacci Number (digits: %d)", id, digits)
 	// prDebug("Workload #%d: Digits: %d\n Fibonacci No.: %s", id, digits, a)
 }
@@ -49,11 +47,13 @@ Loop:
 			prVerboseInfo("Workload #%d: received stop signal", id)
 			break Loop
 		default:
-			fmt.Println(id, ": running...")
+			prVerboseInfo("%d: starting workload...", id)
+			fibonacci(id)
+
+			// add result
+			chResult <- true
 
 			// time.Sleep(10 * time.Second)
-			// chResult <- true
-			fibonacci(id)
 		}
 	}
 
