@@ -199,6 +199,8 @@ Starting the application is as simple as
 ```shell
 $ docker run -d --rm -p 8080:8080 'IMAGE:TAG'
 ```
+and then find it at http://localhost:8080/api/home
+
 
 To set up a larger local demo using docker, please compile and build the images to your local docker registry and then change your location to "demo", where you find a usable **docker-compose.yml**.
 
