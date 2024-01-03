@@ -77,7 +77,7 @@ metadata:
   namespace: kudapp
   annotations:
     traefik.ingress.kubernetes.io/service.sticky.cookie: "true"
-    traefik.ingress.kubernetes.io/service.sticky.cookie.name: LBKUDAPPRED
+    traefik.ingress.kubernetes.io/service.sticky.cookie.name: LB_RED_KUBE
 spec:
   ports:
   - name: http-alt
