@@ -8,6 +8,7 @@ metadata:
     app: kdagreen
 spec:
   replicas: 2
+  revisionHistoryLimit: 5
   selector:
     matchLabels:
         app: kdagreen
