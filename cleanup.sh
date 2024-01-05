@@ -1,6 +1,6 @@
 #!/bin/bash
 
-rm -f kudapp
+rm -f build/linux/{arm64,amd64}/kudapp
 for t in latest red blue green
 do
     docker image rm kudapp:$t

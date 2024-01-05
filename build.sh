@@ -1,6 +1,6 @@
 #!/bin/bash
 
-APP="kudapp"
+APP="build/linux/amd64/kudapp"
 HTML="html"
 TMPL="templates"
 
