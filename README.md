@@ -12,40 +12,40 @@ KuDAPP is heavily inspired by **KUARD** - the [**Demo application for "Kubernete
 
 After start up, an instance provides the following URLs (with optional prefix):
 
-- **Startpage: \[/prefix\]/api/home**
+- **Startpage: \[/prefix\]/api/home**  
   Displays the startpage with a short information summary
   
-- **Status Information: \[/prefix\]/api/status**
+- **Status Information: \[/prefix\]/api/status**  
   Get some information as seen from 'inside'. This includes all request headers, some system information and all environment variables in the running container
   
-- **Set Appl. Name:  \[/prefix\]/api/setname**
+- **Set Appl. Name:  \[/prefix\]/api/setname**  
   Change the application name.
   
-- **Set Color:  \[/prefix\]/api/setcolor**
+- **Set Color:  \[/prefix\]/api/setcolor**  
   Play with background colors. This may help to distinguish several instances in a pool or backend
 
-- **Set Response Code: \[/prefix\]/api/setstatus**
+- **Set Response Code: \[/prefix\]/api/setstatus**  
   Set the HTTP response status code to a certain value. This is the value returned by the /check URL
   
-- **Toggle Resp. Code: \[/prefix\]/api/togglestatus**
+- **Toggle Resp. Code: \[/prefix\]/api/togglestatus**  
   Switch the response status code between 200 and 500. This is a shortcut for setting an individual value
   
-- **Health Check: \[/prefix\]/check**
+- **Health Check: \[/prefix\]/check**  
   Get the current response status code (default: 200). Can be set with "Set Status Code" (see above)
   
-- **Always Healthy: \[/prefix\]/check/healthy**
+- **Always Healthy: \[/prefix\]/check/healthy**  
   Always return a response status code of 200
   
-- **Always Unhealthy: \[/prefix\]/check/unhealthy**
+- **Always Unhealthy: \[/prefix\]/check/unhealthy**  
   Always return a response status code of 500
 
-- **DNS Query: \[/prefix\]/api/dnsquery**
+- **DNS Query: \[/prefix\]/api/dnsquery**  
 Resolves a given domain to test the DNS
 
-- **Workout: \[/prefix\]/api/workout**
+- **Workout: \[/prefix\]/api/workout**  
 Starts and stops the dummy workout to produce system load
 
-- **Kill Container: \[/prefix\]/api/kill**
+- **Kill Container: \[/prefix\]/api/kill**  
 Kills the process (and therefore the container) immediately
 
 Additionally, any static file (e.g. "foo.html") inside the document root (default: the "html"-directory) will be served as "/foo.html". You also may create subdirectories there, as long as the path does not conflict with the URLs above. Do not remove the css components there. 
