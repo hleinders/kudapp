@@ -21,9 +21,8 @@
 <body>
 
 <!-- Sidebar/menu -->
-
 {{block "sidebar" .}}
-<nav class="w3-sidebar w3-{{if .BgColor}}{{.BgColor}}{{else}}red{{end}} w3-collapse w3-top w3-large w3-padding" style="z-index:3;width:300px;font-weight:bold;" id="mySidebar"><br>
+<nav class="w3-sidebar w3-{{if .BgColor}}{{.BgColor}}{{else}}red{{end}} w3-collapse w3-top w3-medium w3-padding" style="z-index:3;width:300px;font-weight:bold;" id="mySidebar"><br>
   <a href="javascript:void(0)" onclick="w3_close()" class="w3-button w3-hide-large w3-display-topleft" style="width:100%;font-size:22px">Close Menu</a>
 
   {{block "menutitle" .}}
@@ -33,21 +32,24 @@
   {{end}}
 
   {{block "menu" .}}
+  {{ $MNC := "w3-grey" }}
+  {{if eq .BgColor "grey"}} {{ $MNC = "w3-white" }} {{end}}
+
   <div class="w3-bar-block">
-    <a href="{{.Context}}/api/home" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Home</a>
-    <a href="{{.Context}}/api/status" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Status Information</a>
+    <a href="{{.Context}}/api/home" onclick="w3_close()" class="w3-bar-item w3-button w3-round {{if eq .Active "menuHome"}} {{ $MNC }} {{end}}">Home</a>
+    <a href="{{.Context}}/api/status" onclick="w3_close()" class="w3-bar-item w3-button w3-round {{if eq .Active "menuStatus"}} {{ $MNC }} {{end}}">Status Information</a>
     <hr>
-    <a href="{{.Context}}/api/setname" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Set Appl. Name</a>
-    <a href="{{.Context}}/api/setcolor" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Set Color</a>
-    <a href="{{.Context}}/api/setstatus" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Set Response Code</a>
-    <a href="{{.Context}}/api/togglestatus" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Toggle Resp. Code</a>
+    <a href="{{.Context}}/api/setname" onclick="w3_close()" class="w3-bar-item w3-button w3-round {{if eq .Active "menuSetName"}} {{ $MNC }} {{end}}">Set Appl. Name</a>
+    <a href="{{.Context}}/api/setcolor" onclick="w3_close()" class="w3-bar-item w3-button w3-round {{if eq .Active "menuSetColor"}} {{ $MNC }} {{end}}">Set Color</a>
+    <a href="{{.Context}}/api/setstatus" onclick="w3_close()" class="w3-bar-item w3-button w3-round {{if eq .Active "menuSetCode"}} {{ $MNC }} {{end}}">Set Response Code</a>
+    <a href="{{.Context}}/api/togglestatus" onclick="w3_close()" class="w3-bar-item w3-button w3-round {{if eq .Active "menuToggle"}} {{ $MNC }} {{end}}">Toggle Resp. Code</a>
     <hr>
-    <a href="{{.Context}}/check" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Health check</a>
-    <a href="{{.Context}}/check/healthy" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Always Healthy</a>
-    <a href="{{.Context}}/check/unhealthy" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Always Unhealthy</a>
+    <a href="{{.Context}}/check" onclick="w3_close()" class="w3-bar-item w3-button w3-round {{if eq .Active "menuCheck"}} {{ $MNC }} {{end}}">Health check</a>
+    <a href="{{.Context}}/check/healthy" onclick="w3_close()" class="w3-bar-item w3-button w3-round {{if eq .Active "menuHealthy"}} {{ $MNC }} {{end}}">Always Healthy</a>
+    <a href="{{.Context}}/check/unhealthy" onclick="w3_close()" class="w3-bar-item w3-button w3-round {{if eq .Active "menuUnHealthy"}} {{ $MNC }} {{end}}">Always Unhealthy</a>
     <hr>
-    <a href="{{.Context}}/api/workout" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Workout</a>
-    <a href="{{.Context}}/api/kill" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Kill Container</a>
+    <a href="{{.Context}}/api/workout" onclick="w3_close()" class="w3-bar-item w3-button w3-round {{if eq .Active "menuWorkout"}} {{ $MNC }} {{end}}">Workout</a>
+    <a href="{{.Context}}/api/kill" onclick="w3_close()" class="w3-bar-item w3-button w3-round {{if eq .Active "menuKill"}} {{ $MNC }} {{end}}">Kill Container</a>
   </div>
   {{end}}
 

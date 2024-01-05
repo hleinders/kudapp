@@ -22,6 +22,7 @@ type tplData struct {
 	PageTitle string
 	Title     string
 	Subtitle  string
+	Active    string
 	Content   []string
 	Colors    []string
 	Sections  []tplEntryList
@@ -41,13 +42,14 @@ func (wo *tplWorkout) SetRunStat(st bool) {
 	wo.WorkoutRunning = st
 }
 
-func newTplData(title string) *tplData {
+func newTplData(title, active string) *tplData {
 	td := tplData{
 		BgColor:   globalBackGround,
 		AppName:   globalAppName,
 		Context:   globalContext,
 		PageTitle: globalAppName + ": " + title,
 		Title:     title,
+		Active:    active,
 	}
 
 	return &td

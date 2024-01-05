@@ -292,7 +292,7 @@ func main() {
 
 	http.HandleFunc(globalContext+"/api/setname", apiSetName)
 	http.HandleFunc(globalContext+"/api/setcolor", apiSetColor)
-	http.HandleFunc(globalContext+"/api/setstatus", apiSetStatus)
+	http.HandleFunc(globalContext+"/api/setstatus", apiSetCode)
 	http.HandleFunc(globalContext+"/api/togglestatus", apiToggleStatus)
 
 	http.HandleFunc(globalContext+"/check", checkStatus)

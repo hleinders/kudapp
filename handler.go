@@ -13,7 +13,7 @@ func createIndexFile() {
 	index, err := template.ParseFiles(getFullPath(globalTemplateDir, indexTemplate))
 	check(err, ErrTemplateParser)
 
-	statusData := newTplData("Redirect")
+	statusData := newTplData("Redirect", "menuIndex")
 
 	// Create the file
 	fname := getFullPath(globalDocRoot, "index.html")
@@ -27,7 +27,7 @@ func apiHome(w http.ResponseWriter, req *http.Request) {
 	home, err := inheritBase("home.tmpl")
 	check(err, ErrTemplateParser)
 
-	statusData := newTplData("Kube Demo Application")
+	statusData := newTplData("Kube Demo Application", "menuHome")
 	statusData.Subtitle = "Overview"
 
 	tmpData, err := collectHome(req)
@@ -41,7 +41,7 @@ func apiHelp(w http.ResponseWriter, req *http.Request) {
 	help, err := inheritBase("help.tmpl")
 	check(err, ErrTemplateParser)
 
-	statusData := newTplData("Kube Demo Application: KuDAPP")
+	statusData := newTplData("Kube Demo Application: KuDAPP", "menuHelp")
 	statusData.Subtitle = "Short Introduction"
 
 	help.Execute(w, statusData)
@@ -51,7 +51,7 @@ func apiStatus(w http.ResponseWriter, req *http.Request) {
 	tmpl, err := inheritBase("status.tmpl")
 	check(err, ErrTemplateParser)
 
-	statusData := newTplData("Status Information")
+	statusData := newTplData("Status Information", "menuStatus")
 
 	tmpData, err := collectHeader(req)
 	check(err, ErrGetHeader)
@@ -72,7 +72,7 @@ func apiSetName(w http.ResponseWriter, req *http.Request) {
 	tmpl, err := inheritBase("set_name.tmpl")
 	check(err, ErrTemplateParser)
 
-	statusData := newTplData("Set Application Name")
+	statusData := newTplData("Set Application Name", "menuSetName")
 
 	if req.Method == "GET" {
 		statusData.Subtitle = fmt.Sprintf("Current Name: %s", globalAppName)
@@ -107,11 +107,11 @@ func apiSetName(w http.ResponseWriter, req *http.Request) {
 	tmpl.Execute(w, statusData)
 }
 
-func apiSetStatus(w http.ResponseWriter, req *http.Request) {
+func apiSetCode(w http.ResponseWriter, req *http.Request) {
 	tmpl, err := inheritBase("set_status.tmpl")
 	check(err, ErrTemplateParser)
 
-	statusData := newTplData("Set Response Code")
+	statusData := newTplData("Set Response Code", "menuSetCode")
 
 	if req.Method == "GET" {
 		statusData.Subtitle = fmt.Sprintf("Current Response Code: %d", globalStatusCode)
@@ -164,7 +164,7 @@ func apiToggleStatus(w http.ResponseWriter, req *http.Request) {
 		globalStatusCode = 200
 	}
 
-	statusData := newTplData("Health Check")
+	statusData := newTplData("Health Check", "menuToggle")
 	statusData.Subtitle = fmt.Sprintf("Toggle Response Status: %d --> %d", oldCode, globalStatusCode)
 
 	w.WriteHeader(int(globalStatusCode))
@@ -175,7 +175,7 @@ func apiSetColor(w http.ResponseWriter, req *http.Request) {
 	tmpl, err := inheritBase("set_color.tmpl")
 	check(err, ErrTemplateParser)
 
-	statusData := newTplData("Set Application Color")
+	statusData := newTplData("Set Application Color", "menuSetColor")
 	statusData.Colors = validColors
 
 	if req.Method == "POST" {
@@ -216,7 +216,7 @@ func checkStatus(w http.ResponseWriter, req *http.Request) {
 	tmpl, err := inheritBase("check.tmpl")
 	check(err, ErrTemplateParser)
 
-	statusData := newTplData("Health Check")
+	statusData := newTplData("Health Check", "menuCheck")
 	statusData.Subtitle = fmt.Sprintf("Current Response Status: %d", globalStatusCode)
 
 	w.WriteHeader(int(globalStatusCode))
@@ -229,7 +229,7 @@ func checkHealthy(w http.ResponseWriter, req *http.Request) {
 	tmpl, err := inheritBase("check.tmpl")
 	check(err, ErrTemplateParser)
 
-	statusData := newTplData("Health Check")
+	statusData := newTplData("Health Check", "menuHealthy")
 	statusData.Subtitle = fmt.Sprintf("Response Status Code: %d", rcode)
 
 	w.WriteHeader(200)
@@ -242,7 +242,7 @@ func checkUnHealthy(w http.ResponseWriter, req *http.Request) {
 	tmpl, err := inheritBase("check.tmpl")
 	check(err, ErrTemplateParser)
 
-	statusData := newTplData("Health Check")
+	statusData := newTplData("Health Check", "menuUnHealthy")
 	statusData.Subtitle = fmt.Sprintf("Response Status Code: %d", rcode)
 
 	w.WriteHeader(500)
@@ -253,7 +253,7 @@ func apiWorkout(w http.ResponseWriter, req *http.Request) {
 	tmpl, err := inheritBase("workout.tmpl")
 	check(err, ErrTemplateParser)
 
-	statusData := newTplData("Workout Control")
+	statusData := newTplData("Workout Control", "menuWorkout")
 	if globalWorkoutOn {
 		statusData.Subtitle = fmt.Sprintf("Workout running (results: %d)", globalWorkerResult)
 	} else {
@@ -313,7 +313,7 @@ func apiKill(w http.ResponseWriter, req *http.Request) {
 	kill, err := inheritBase("kill.tmpl")
 	check(err, ErrTemplateParser)
 
-	statusData := newTplData("Kill Container")
+	statusData := newTplData("Kill Container", "menuKill")
 
 	if req.Method == "POST" {
 		err = req.ParseForm()
