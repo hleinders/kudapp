@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"html/template"
 	"log"
+	"net"
 	"net/http"
 	"os"
 	"strconv"
@@ -301,6 +302,53 @@ func apiWorkout(w http.ResponseWriter, req *http.Request) {
 		return
 
 	} else if req.Method == "GET" {
+		tmpl.Execute(w, statusData)
+		return
+	}
+
+	statusData.Subtitle = fmt.Sprintf("Unknown Method: %s", req.Method)
+	tmpl.Execute(w, statusData)
+}
+
+func apiDNSQuery(w http.ResponseWriter, req *http.Request) {
+	tmpl, err := inheritBase("dns_query.tmpl")
+	check(err, ErrTemplateParser)
+
+	statusData := newTplData("DNS Query", "menuDNSQuery")
+
+	if req.Method == "GET" {
+		statusData.Subtitle = "Domain name resolver"
+		tmpl.Execute(w, statusData)
+		return
+	} else if req.Method == "POST" {
+		err = req.ParseForm()
+		check(err, ErrParseForm)
+
+		button := req.PostForm.Get("ButtonPressed")
+		if button == "Cancel" {
+			apiHome(w, req)
+			return
+		}
+
+		domainName := req.PostForm.Get("DomainName")
+		prDebug("Got domain: %s\n", domainName)
+		if domainName = cleanString(domainName); len(domainName) == 0 {
+			statusData.Subtitle = "Error: domain name is empty!"
+			statusData.Content = []string{"Please enter a non empty name"}
+			tmpl.Execute(w, statusData)
+			return
+		}
+
+		// all ok, use it:
+		ips, err := net.LookupIP(domainName)
+		if err != nil {
+			statusData.Subtitle = fmt.Sprintf("Could not get IPs: %v", err)
+		} else {
+			for _, v := range ips {
+				statusData.Content = append(statusData.Content, v.String())
+			}
+			statusData.Subtitle = fmt.Sprintf("Resolving: %s", domainName)
+		}
 		tmpl.Execute(w, statusData)
 		return
 	}

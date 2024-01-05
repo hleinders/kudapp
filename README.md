@@ -23,6 +23,7 @@ After start up, an instance provides the following URLs (with optional prefix):
   
 - **Set Color:  \[/prefix\]/api/setcolor**
   Play with background colors. This may help to distinguish several instances in a pool or backend
+
 - **Set Response Code: \[/prefix\]/api/setstatus**
   Set the HTTP response status code to a certain value. This is the value returned by the /check URL
   
@@ -37,8 +38,13 @@ After start up, an instance provides the following URLs (with optional prefix):
   
 - **Always Unhealthy: \[/prefix\]/check/unhealthy**
   Always return a response status code of 500
+
+- **DNS Query: \[/prefix\]/api/dnsquery**
+Resolves a given domain to test the DNS
+
 - **Workout: \[/prefix\]/api/workout**
 Starts and stops the dummy workout to produce system load
+
 - **Kill Container: \[/prefix\]/api/kill**
 Kills the process (and therefore the container) immediately
 

@@ -1,0 +1,37 @@
+<!-- Header -->
+{{block "contentheader" .}}
+<h1 class="w3-jumbo"><b>{{.Title}}</b></h1>
+<h2 class="w3-xxlarge w3-text-{{if .BgColor}}{{.BgColor}}{{else}}red{{end}} w3-padding-top-32"><b>{{.Subtitle}}</b></h2>
+<hr style="width:50px;border:5px solid {{if .BgColor}}{{.BgColor}}{{else}}red{{end}}" class="w3-round">
+{{end}}
+
+{{block "contentdata" .}}
+{{ $BGC := .BgColor }}
+{{ $CTX := .Context }}
+
+{{ if .Content }} 
+<p>
+  <div class="w3-large"><strong>Result(s):</strong></div>
+  <ul>
+    {{ range .Content }}
+    <li>{{.}}</i>
+    {{end}}
+  </ul>
+</p>
+<form action="{{ $CTX }}/api/dnsquery" method="get">
+  <button type="submit" name="ButtonPressed" value="NewQuery" class="w3-button w3-block w3-round-large w3-padding-large w3-{{if .BgColor}}{{.BgColor}}{{else}}red{{end}} w3-margin-bottom" style="width:20em">New query</button>
+</form>
+
+{{else}}
+
+<form action="{{ $CTX }}/api/dnsquery" method="post">
+  <div class="w3-section" style="width:20em">
+    <label>Enter domain:</label>
+    <input class="w3-input w3-border w3-round-large w3-padding" type="text" name="DomainName">
+  </div>
+  <button type="submit" name="ButtonPressed" value="Submit" class="w3-button w3-block w3-round-large w3-padding-large w3-{{if .BgColor}}{{.BgColor}}{{else}}red{{end}} w3-margin-bottom" style="width:20em">Resolve</button>
+  <button type="submit" name="ButtonPressed" value="Cancel" class="w3-button w3-block w3-round-large w3-padding-large w3-grey w3-margin-bottom" style="width:20em">Cancel</button>
+</form>
+{{end}}
+
+{{end}}

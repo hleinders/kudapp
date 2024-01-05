@@ -299,6 +299,7 @@ func main() {
 	http.HandleFunc(globalContext+"/check/healthy", checkHealthy)
 	http.HandleFunc(globalContext+"/check/unhealthy", checkUnHealthy)
 
+	http.HandleFunc(globalContext+"/api/dnsquery", apiDNSQuery)
 	http.HandleFunc(globalContext+"/api/workout", apiWorkout)
 	http.HandleFunc(globalContext+"/api/kill", apiKill)
 
