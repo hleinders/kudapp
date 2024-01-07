@@ -116,7 +116,6 @@ func cleanPath(str string) string {
 		return str
 	}
 	return filepath.Clean(cleanString(str))
-
 }
 
 func cleanIP(addr string) (string, string) {
@@ -129,7 +128,8 @@ func cleanIP(addr string) (string, string) {
 		host, port, err = net.SplitHostPort(addr)
 		check(err, ErrGetHost)
 	} else {
-		host = addr
+		host, _, _ = net.SplitHostPort(addr + ":0000")
+		check(err, ErrGetHost)
 	}
 
 	return host, port
