@@ -25,15 +25,16 @@ func collectEnvironment() (tplEntryList, error) {
 	return env, err
 }
 
-func collectHeader(req *http.Request) (tplEntryList, error) {
+func collectReqDetails(req *http.Request) (tplEntryList, error) {
 	var err error
-	var hdr tplEntryList
+	var dtl tplEntryList
 
+	dtl.Name = "Request Details"
 	if req.RemoteAddr != "" {
 		cip, cport := getClientIP(req)
-		hdr.Entries = append(hdr.Entries, tplEntry{Key: "Client IP", Value: cip})
+		dtl.Entries = append(dtl.Entries, tplEntry{Key: "Client IP", Value: cip})
 		if cport != "" {
-			hdr.Entries = append(hdr.Entries, tplEntry{Key: "Client Port", Value: cport})
+			dtl.Entries = append(dtl.Entries, tplEntry{Key: "Client Port", Value: cport})
 		}
 	}
 
@@ -41,19 +42,26 @@ func collectHeader(req *http.Request) (tplEntryList, error) {
 		check(err, ErrGetHost)
 		hip, hport := cleanIP(req.Host)
 
-		hdr.Entries = append(hdr.Entries, tplEntry{Key: "Request Host", Value: hip})
+		dtl.Entries = append(dtl.Entries, tplEntry{Key: "Request Host", Value: hip})
 		if hport != "" {
-			hdr.Entries = append(hdr.Entries, tplEntry{Key: "Request Port", Value: hport})
+			dtl.Entries = append(dtl.Entries, tplEntry{Key: "Request Port", Value: hport})
 		}
 	}
 
 	if req.RequestURI != "" {
-		hdr.Entries = append(hdr.Entries, tplEntry{Key: "Request URI", Value: req.RequestURI})
+		dtl.Entries = append(dtl.Entries, tplEntry{Key: "Request URI", Value: req.RequestURI})
 	}
 
 	if req.Method != "" {
-		hdr.Entries = append(hdr.Entries, tplEntry{Key: "Request Method", Value: req.Method})
+		dtl.Entries = append(dtl.Entries, tplEntry{Key: "Request Method", Value: req.Method})
 	}
+
+	return dtl, err
+}
+
+func collectReqHeader(req *http.Request) (tplEntryList, error) {
+	var err error
+	var hdr tplEntryList
 
 	hdr.Name = "Request Header"
 	keys := sortedKeys(req.Header)
