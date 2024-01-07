@@ -54,7 +54,11 @@ func apiStatus(w http.ResponseWriter, req *http.Request) {
 
 	statusData := newTplData("Status Information", "menuStatus")
 
-	tmpData, err := collectHeader(req)
+	tmpData, err := collectReqDetails(req)
+	check(err, ErrGetHeader)
+	statusData.Sections = append(statusData.Sections, tmpData)
+
+	tmpData, err = collectReqHeader(req)
 	check(err, ErrGetHeader)
 	statusData.Sections = append(statusData.Sections, tmpData)
 
