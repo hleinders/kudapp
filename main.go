@@ -25,6 +25,7 @@ const (
 	ErrNoDocroot
 	ErrWriteIndex
 	ErrTemplateParser
+	ErrTemplateExecute
 	ErrGetHome
 	ErrGetEnvironment
 	ErrGetHeader
@@ -180,22 +181,22 @@ func main() {
 	flag.StringVarP(&flags.templateDir, "template-dir", "T", globalTemplateDir, "use templates from `path`")
 	flag.StringVarP(&flags.documentRoot, "document-root", "D", globalDocRoot, "set document root to `path`")
 
-	flag.CommandLine.MarkHidden("debug")
+	displayErr(flag.CommandLine.MarkHidden("debug"))
 
 	flag.Parse()
 
-	vp.BindPFlag("Verbose", flag.Lookup("verbose"))
-	vp.BindPFlag("Debug", flag.Lookup("debug"))
-	vp.BindPFlag("NoColor", flag.Lookup("mono"))
-	vp.BindPFlag("AsciiMode", flag.Lookup("ascii"))
-	vp.BindPFlag("CreateIndex", flag.Lookup("create-index"))
-	vp.BindPFlag("DefaultColor", flag.Lookup("default-color"))
-	vp.BindPFlag("ServerPort", flag.Lookup("serverPort"))
-	vp.BindPFlag("ContextPrefix", flag.Lookup("context"))
-	vp.BindPFlag("ApplicationName", flag.Lookup("app-name"))
-	vp.BindPFlag("EnvironmentPrefix", flag.Lookup("env-prefix"))
-	vp.BindPFlag("DocumentRoot", flag.Lookup("document-root"))
-	vp.BindPFlag("TemplateDir", flag.Lookup("template-dir"))
+	displayErr(vp.BindPFlag("Verbose", flag.Lookup("verbose")))
+	displayErr(vp.BindPFlag("Debug", flag.Lookup("debug")))
+	displayErr(vp.BindPFlag("NoColor", flag.Lookup("mono")))
+	displayErr(vp.BindPFlag("AsciiMode", flag.Lookup("ascii")))
+	displayErr(vp.BindPFlag("CreateIndex", flag.Lookup("create-index")))
+	displayErr(vp.BindPFlag("DefaultColor", flag.Lookup("default-color")))
+	displayErr(vp.BindPFlag("ServerPort", flag.Lookup("serverPort")))
+	displayErr(vp.BindPFlag("ContextPrefix", flag.Lookup("context")))
+	displayErr(vp.BindPFlag("ApplicationName", flag.Lookup("app-name")))
+	displayErr(vp.BindPFlag("EnvironmentPrefix", flag.Lookup("env-prefix")))
+	displayErr(vp.BindPFlag("DocumentRoot", flag.Lookup("document-root")))
+	displayErr(vp.BindPFlag("TemplateDir", flag.Lookup("template-dir")))
 
 	if flags.help {
 		flag.Usage()

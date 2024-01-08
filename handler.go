@@ -21,7 +21,7 @@ func createIndexFile() {
 	f, err := os.Create(fname)
 	check(err, ErrWriteIndex)
 	defer f.Close()
-	index.Execute(f, statusData)
+	displayErr(index.Execute(f, statusData))
 }
 
 func apiHome(w http.ResponseWriter, req *http.Request) {
@@ -35,7 +35,7 @@ func apiHome(w http.ResponseWriter, req *http.Request) {
 	check(err, ErrGetHome)
 	statusData.Sections = append(statusData.Sections, tmpData)
 
-	home.Execute(w, statusData)
+	displayErr(home.Execute(w, statusData))
 }
 
 func apiHelp(w http.ResponseWriter, req *http.Request) {
@@ -45,7 +45,7 @@ func apiHelp(w http.ResponseWriter, req *http.Request) {
 	statusData := newTplData("Kube Demo Application: KuDAPP", "menuHelp")
 	statusData.Subtitle = "Short Introduction"
 
-	help.Execute(w, statusData)
+	displayErr(help.Execute(w, statusData))
 }
 
 func apiStatus(w http.ResponseWriter, req *http.Request) {
@@ -70,7 +70,7 @@ func apiStatus(w http.ResponseWriter, req *http.Request) {
 	check(err, ErrGetEnvironment)
 	statusData.Sections = append(statusData.Sections, tmpData)
 
-	tmpl.Execute(w, statusData)
+	displayErr(tmpl.Execute(w, statusData))
 }
 
 func apiSetName(w http.ResponseWriter, req *http.Request) {
@@ -81,7 +81,7 @@ func apiSetName(w http.ResponseWriter, req *http.Request) {
 
 	if req.Method == "GET" {
 		statusData.Subtitle = fmt.Sprintf("Current Name: %s", globalAppName)
-		tmpl.Execute(w, statusData)
+		displayErr(tmpl.Execute(w, statusData))
 		return
 	} else if req.Method == "POST" {
 		err = req.ParseForm()
@@ -97,19 +97,19 @@ func apiSetName(w http.ResponseWriter, req *http.Request) {
 		if newName = cleanString(newName); len(newName) == 0 {
 			statusData.Subtitle = "Error: new name is empty!"
 			statusData.Content = []string{"Please enter a new name"}
-			tmpl.Execute(w, statusData)
+			displayErr(tmpl.Execute(w, statusData))
 			return
 		}
 
 		// all ok, use it:
 		globalAppName = newName
 		statusData.Subtitle = fmt.Sprintf("Current Name: %s", globalAppName)
-		tmpl.Execute(w, statusData)
+		displayErr(tmpl.Execute(w, statusData))
 		return
 	}
 
 	statusData.Subtitle = fmt.Sprintf("Unknown Method: %s", req.Method)
-	tmpl.Execute(w, statusData)
+	displayErr(tmpl.Execute(w, statusData))
 }
 
 func apiSetCode(w http.ResponseWriter, req *http.Request) {
@@ -120,7 +120,7 @@ func apiSetCode(w http.ResponseWriter, req *http.Request) {
 
 	if req.Method == "GET" {
 		statusData.Subtitle = fmt.Sprintf("Current Response Code: %d", globalStatusCode)
-		tmpl.Execute(w, statusData)
+		displayErr(tmpl.Execute(w, statusData))
 		return
 	} else if req.Method == "POST" {
 		err = req.ParseForm()
@@ -137,25 +137,25 @@ func apiSetCode(w http.ResponseWriter, req *http.Request) {
 		if err != nil {
 			statusData.Subtitle = fmt.Sprintf("Error: %s is not an integer!", newCode)
 			statusData.Content = []string{"Please enter an integer value and try again"}
-			tmpl.Execute(w, statusData)
+			displayErr(tmpl.Execute(w, statusData))
 			return
 		}
 		if rcode < 100 || rcode > 599 {
 			statusData.Subtitle = fmt.Sprintf("Error: %s out of range!", newCode)
 			statusData.Content = []string{"Please enter an integer value between 100 and 599"}
-			tmpl.Execute(w, statusData)
+			displayErr(tmpl.Execute(w, statusData))
 			return
 		}
 
 		// all ok, use it:
 		globalStatusCode = uint(rcode)
 		statusData.Subtitle = fmt.Sprintf("Current Response Code: %d", globalStatusCode)
-		tmpl.Execute(w, statusData)
+		displayErr(tmpl.Execute(w, statusData))
 		return
 	}
 
 	statusData.Subtitle = fmt.Sprintf("Unknown Method: %s", req.Method)
-	tmpl.Execute(w, statusData)
+	displayErr(tmpl.Execute(w, statusData))
 }
 
 func apiToggleStatus(w http.ResponseWriter, req *http.Request) {
@@ -173,7 +173,7 @@ func apiToggleStatus(w http.ResponseWriter, req *http.Request) {
 	statusData.Subtitle = fmt.Sprintf("Toggle Response Status: %d --> %d", oldCode, globalStatusCode)
 
 	w.WriteHeader(int(globalStatusCode))
-	tmpl.Execute(w, statusData)
+	displayErr(tmpl.Execute(w, statusData))
 }
 
 func apiSetColor(w http.ResponseWriter, req *http.Request) {
@@ -197,7 +197,7 @@ func apiSetColor(w http.ResponseWriter, req *http.Request) {
 		if !checkColor(newColor) {
 			statusData.Subtitle = fmt.Sprintf("Error: %s is not avalid color!", newColor)
 			statusData.Content = []string{"Please try again"}
-			tmpl.Execute(w, statusData)
+			displayErr(tmpl.Execute(w, statusData))
 			return
 		}
 
@@ -205,16 +205,16 @@ func apiSetColor(w http.ResponseWriter, req *http.Request) {
 		globalBackGround = newColor
 		statusData.BgColor = newColor
 		statusData.Subtitle = fmt.Sprintf("Current Background Color: %s", globalBackGround)
-		tmpl.Execute(w, statusData)
+		displayErr(tmpl.Execute(w, statusData))
 		return
 	} else if req.Method == "GET" {
 		statusData.Subtitle = fmt.Sprintf("Current Background Color: %s", globalBackGround)
-		tmpl.Execute(w, statusData)
+		displayErr(tmpl.Execute(w, statusData))
 		return
 	}
 
 	statusData.Subtitle = fmt.Sprintf("Unknown Method: %s", req.Method)
-	tmpl.Execute(w, statusData)
+	displayErr(tmpl.Execute(w, statusData))
 }
 
 func checkStatus(w http.ResponseWriter, req *http.Request) {
@@ -225,7 +225,7 @@ func checkStatus(w http.ResponseWriter, req *http.Request) {
 	statusData.Subtitle = fmt.Sprintf("Current Response Status: %d", globalStatusCode)
 
 	w.WriteHeader(int(globalStatusCode))
-	tmpl.Execute(w, statusData)
+	displayErr(tmpl.Execute(w, statusData))
 }
 
 func checkHealthy(w http.ResponseWriter, req *http.Request) {
@@ -238,7 +238,7 @@ func checkHealthy(w http.ResponseWriter, req *http.Request) {
 	statusData.Subtitle = fmt.Sprintf("Response Status Code: %d", rcode)
 
 	w.WriteHeader(200)
-	tmpl.Execute(w, statusData)
+	displayErr(tmpl.Execute(w, statusData))
 }
 
 func checkUnHealthy(w http.ResponseWriter, req *http.Request) {
@@ -251,7 +251,7 @@ func checkUnHealthy(w http.ResponseWriter, req *http.Request) {
 	statusData.Subtitle = fmt.Sprintf("Response Status Code: %d", rcode)
 
 	w.WriteHeader(500)
-	tmpl.Execute(w, statusData)
+	displayErr(tmpl.Execute(w, statusData))
 }
 
 func apiWorkout(w http.ResponseWriter, req *http.Request) {
@@ -302,16 +302,16 @@ func apiWorkout(w http.ResponseWriter, req *http.Request) {
 		}
 
 		statusData.ExtraData = newWorkoutData(globalWorkoutOn)
-		tmpl.Execute(w, statusData)
+		displayErr(tmpl.Execute(w, statusData))
 		return
 
 	} else if req.Method == "GET" {
-		tmpl.Execute(w, statusData)
+		displayErr(tmpl.Execute(w, statusData))
 		return
 	}
 
 	statusData.Subtitle = fmt.Sprintf("Unknown Method: %s", req.Method)
-	tmpl.Execute(w, statusData)
+	displayErr(tmpl.Execute(w, statusData))
 }
 
 func apiDNSQuery(w http.ResponseWriter, req *http.Request) {
@@ -322,7 +322,7 @@ func apiDNSQuery(w http.ResponseWriter, req *http.Request) {
 
 	if req.Method == "GET" {
 		statusData.Subtitle = "Domain name resolver"
-		tmpl.Execute(w, statusData)
+		displayErr(tmpl.Execute(w, statusData))
 		return
 	} else if req.Method == "POST" {
 		err = req.ParseForm()
@@ -339,7 +339,7 @@ func apiDNSQuery(w http.ResponseWriter, req *http.Request) {
 		if domainName = cleanString(domainName); len(domainName) == 0 {
 			statusData.Subtitle = "Error: domain name is empty!"
 			statusData.Content = []string{"Please enter a non empty name"}
-			tmpl.Execute(w, statusData)
+			displayErr(tmpl.Execute(w, statusData))
 			return
 		}
 
@@ -353,12 +353,12 @@ func apiDNSQuery(w http.ResponseWriter, req *http.Request) {
 			}
 			statusData.Subtitle = fmt.Sprintf("Resolving: %s", domainName)
 		}
-		tmpl.Execute(w, statusData)
+		displayErr(tmpl.Execute(w, statusData))
 		return
 	}
 
 	statusData.Subtitle = fmt.Sprintf("Unknown Method: %s", req.Method)
-	tmpl.Execute(w, statusData)
+	displayErr(tmpl.Execute(w, statusData))
 }
 
 func apiKill(w http.ResponseWriter, req *http.Request) {
@@ -375,7 +375,7 @@ func apiKill(w http.ResponseWriter, req *http.Request) {
 
 		if button == "Submit" {
 			statusData.Subtitle = "Killed!"
-			kill.Execute(w, statusData)
+			displayErr(kill.Execute(w, statusData))
 			log.Fatal(fmt.Errorf("kill handler called"))
 		} else if button == "Cancel" {
 			apiHome(w, req)
@@ -383,10 +383,10 @@ func apiKill(w http.ResponseWriter, req *http.Request) {
 		return
 	} else if req.Method == "GET" {
 		statusData.Subtitle = "Please confirm"
-		kill.Execute(w, statusData)
+		displayErr(kill.Execute(w, statusData))
 		return
 	}
 
 	statusData.Subtitle = fmt.Sprintf("Unknown Method: %s", req.Method)
-	kill.Execute(w, statusData)
+	displayErr(kill.Execute(w, statusData))
 }

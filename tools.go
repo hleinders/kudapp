@@ -143,3 +143,7 @@ func dirExists(pth string) bool {
 func getFullPath(base, file string) string {
 	return filepath.Clean(filepath.Join(base, file))
 }
+
+func displayErr(e error) {
+	fmt.Print(e.Error())
+}

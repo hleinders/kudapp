@@ -108,7 +108,7 @@ Loop:
 			duration := time.Since(startUpTime)
 			if duration >= time.Duration(globalGFMaxRuntime*int(time.Minute)) {
 				prVerboseInfo("ALERT: Worker watchdog: maximum runtime reached! stop all workers")
-				workoutStop(num)
+				displayErr(workoutStop(num))
 				return
 			}
 			prDebug("watchdog still waiting...")
