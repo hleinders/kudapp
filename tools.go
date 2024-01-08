@@ -146,6 +146,6 @@ func getFullPath(base, file string) string {
 
 func displayErr(e error) {
 	if e != nil {
-		fmt.Print(e.Error())
+		prError(e.Error())
 	}
 }

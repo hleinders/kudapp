@@ -17,11 +17,12 @@ func prInfo(fmtString string, args ...interface{}) {
 		fs := "*** WARN: " + fmtString
 		log.Printf(mkYellow(fs), args...)
 	}
+*/
+func prError(fmtString string, args ...interface{}) {
+	log.Printf(mkRed(fmtString), args...)
+}
 
-	func prError(fmtString string, args ...interface{}) {
-		log.Printf(mkRed(fmtString), args...)
-	}
-
+/*
 	func prVerbose(fmtString string, args ...interface{}) {
 		if vp.GetBool("Verbose") {
 			log.Printf(fmtString, args...)
