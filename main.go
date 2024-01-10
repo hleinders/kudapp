@@ -191,7 +191,7 @@ func main() {
 	displayErr(vp.BindPFlag("AsciiMode", flag.Lookup("ascii")))
 	displayErr(vp.BindPFlag("CreateIndex", flag.Lookup("create-index")))
 	displayErr(vp.BindPFlag("DefaultColor", flag.Lookup("default-color")))
-	displayErr(vp.BindPFlag("ServerPort", flag.Lookup("serverPort")))
+	displayErr(vp.BindPFlag("ServerPort", flag.Lookup("port")))
 	displayErr(vp.BindPFlag("ContextPrefix", flag.Lookup("context")))
 	displayErr(vp.BindPFlag("ApplicationName", flag.Lookup("app-name")))
 	displayErr(vp.BindPFlag("EnvironmentPrefix", flag.Lookup("env-prefix")))
