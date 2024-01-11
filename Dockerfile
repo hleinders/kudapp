@@ -5,13 +5,18 @@ LABEL org.opencontainers.image.authors="harald@leinders.de"
 ARG DEFAULT_PORT="8080"
 ARG DEAFULT_APPNAME="KuDAPP"
 ARG DEAFULT_COLOR="red"
+
 ARG TARGETOS=linux
 ARG TARGETARCH=amd64
+ARG TARGETPLATFORM
+
+ENV TARGETPLATFORM=${TARGETPLATFORM:-linux/amd64}
 
 RUN apk add --no-cache curl wget
 RUN mkdir -p /opt/kudapp
 
-COPY build/${TARGETOS}/${TARGETARCH}/kudapp /opt/kudapp/kudapp
+RUN echo "Building: ${TARGETPLATFORM}"
+COPY build/${TARGETPLATFORM}/kudapp /opt/kudapp/kudapp
 COPY templates /opt/kudapp/templates/
 COPY html /opt/kudapp/html/
 
