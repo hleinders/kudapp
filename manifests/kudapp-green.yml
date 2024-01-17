@@ -20,7 +20,7 @@ spec:
         app: kdagreen
         app.kubernetes.io/name: kudapp-green
     spec:
-      imagePullSecrets: 
+      imagePullSecrets:
         - name: registry-credentials
       containers:
         - image: gitlab.test.dwinternal.com:5050/hleinders/kudapp:latest
@@ -62,8 +62,8 @@ spec:
             timeoutSeconds: 1
           resources:
             requests:
-              cpu: "256m"
-              memory: "128Mi"
+              cpu: "128m"
+              memory: "64Mi"
             limits:
               cpu: "512m"
               memory: "256Mi"

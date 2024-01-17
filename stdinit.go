@@ -36,7 +36,7 @@ var bulletChar = "•"
 // Application Details
 const (
 	appName    = "kudapp"
-	appVersion = "1.0 (2023-12-30)"
+	appVersion = "1.1 (2024-01-11)"
 	appAuthor  = "Harald Leinders"
 	appEMail   = "harald@leinders.de"
 	maxLineLen = 80

@@ -18,7 +18,7 @@ spec:
       labels:
         app.kubernetes.io/name: nginx
     spec:
-      imagePullSecrets: 
+      imagePullSecrets:
         - name: registry-credentials
       containers:
         - name: nginx
@@ -45,7 +45,7 @@ spec:
               memory: 128Mi
             requests:
               cpu: 100m
-              memory: 128Mi
+              memory: 64Mi
 
 ---
 apiVersion: v1
