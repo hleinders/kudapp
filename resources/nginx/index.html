@@ -57,8 +57,8 @@
       <hr style="width:50px;border:5px solid #ffc107" class="w3-round">
 
       <p class="w3-text">
-        This is a little demo application for Kubernetes or Docker environments. 
-        It is intended for testing, debugging and learning about elements like services, ingresses, 
+        This is a little demo application for Kubernetes or Docker environments.
+        It is intended for testing, debugging and learning about elements like services, ingresses,
         limits and health checks.</p>
       <p>Select one of the 'colors' in the side bar to the left for one of the demo instances.</p>
       <h4>Any instance has the following features:</h4>
@@ -75,7 +75,7 @@
           <dd>Play with background colors. This may help to distinguish several instances in an pool or a backend</dd>
           <dt class="w3-large">Set Response Code: [/prefix]/api/setstatus</dt>
           <dd>Set the http response status code to a certain value. This is the value returned by the /check URL</dd>
-          <dt class="w3-large">Toggle Resp. Code: [/prefix]/api/setstatus</dt>
+          <dt class="w3-large">Toggle Resp. Code: [/prefix]/api/togglestatus</dt>
           <dd>Switch the response status code between 200 and 500. This is a shortcut for setting an individual value</dd>
           <dt class="w3-large">Health Check: [/prefix]/check</dt>
           <dd>Get the current response status code (default: 200). Can be set with "Set Status Code" (see above)</dd>
@@ -89,7 +89,7 @@
           <dd>Starts and stops the dummy workout to produce system load</dd>
           <dt class="w3-large">Kill Container: [/prefix]/api/kill</dt>
           <dd>Kills the process (and therefore the container) immediately</dd>
-  </dl>
+      </dl>
     </p>
 
     </div>
