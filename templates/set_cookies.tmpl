@@ -1,0 +1,60 @@
+<!-- Header -->
+{{block "contentheader" .}}
+<h1 class="w3-jumbo"><b>{{.Title}}</b></h1>
+<h2 class="w3-xxlarge w3-text-{{if .BgColor}}{{.BgColor}}{{else}}red{{end}} w3-padding-top-32"><b>{{.Subtitle}}</b></h2>
+<hr style="width:50px;border:5px solid {{if .BgColor}}{{.BgColor}}{{else}}red{{end}}" class="w3-round">
+{{end}}
+
+{{block "contentdata" .}}
+{{ $BGC := .BgColor }}
+{{ $CTX := .Context }}
+
+<div class="w3-cell-row">
+
+  <div class="w3-container w3-cell">
+    <p><b>Create a new cookie:</b></p>
+    <form action="{{ $CTX }}/api/setcookies/create" method="post">
+      <div class="w3-section" style="width:20em">
+        <label>Cookie name:</label>
+        <input class="w3-input w3-border w3-round-large w3-padding" type="text" name="NewCName" placeholder="Enter a name">
+        <p></p>
+        <label>Cookie value:</label>
+        <input class="w3-input w3-border w3-round-large w3-padding" type="text" name="NewCValue" placeholder="Enter a value or 'auto'">
+      </div>
+      <button type="submit" name="ButtonPressed" value="Submit" class="w3-button w3-block w3-round-large w3-padding-large w3-{{if .BgColor}}{{.BgColor}}{{else}}red{{end}} w3-margin-bottom" style="width:20em">Create Cookie</button>
+      <button type="submit" name="ButtonPressed" value="Cancel" class="w3-button w3-block w3-round-large w3-padding-large w3-grey w3-margin-bottom" style="width:20em">Cancel</button>
+    </form>
+  </div>
+
+  <div class="w3-container w3-cell" style="border-left: 6px solid {{$BGC}}; padding-left: 2em;">
+
+      {{if .Sections}}
+      {{ range .Sections }}
+        <section>
+          <p><b>Existing cookies:</b></p>
+
+          <form action="{{ $CTX }}/api/setcookies/delete" method="post">
+            <div class="w3-section" style="width:20em">
+              {{ range .Entries }}
+                <p>
+                  <input class="w3-check" type="checkbox" name="cookies2delete" value="{{.Key}}" >
+                  <label>{{.ShortenKey 20}} = {{.ShortenValue 20}} </label>
+                </p>
+              {{else}}
+                <p><b>None!</b></p>
+              {{end}}
+            </div>
+            {{ if .Entries }}
+            <button type="submit" name="ButtonPressed" value="Submit" class="w3-button w3-block w3-round-large w3-padding-large w3-{{if $BGC}}{{$BGC}}{{else}}red{{end}} w3-margin-bottom" style="width:20em">Delete Cookie(s)</button>
+            <button type="submit" name="ButtonPressed" value="Cancel" class="w3-button w3-block w3-round-large w3-padding-large w3-grey w3-margin-bottom" style="width:20em">Cancel</button>
+              {{end}}
+          </form>
+
+        </section>
+      {{end}}
+    {{end}}
+
+  </div>
+
+</div>
+{{end}}

@@ -25,6 +25,18 @@ func collectEnvironment() (tplEntryList, error) {
 	return env, err
 }
 
+func collectCookies() (tplEntryList, error) {
+	var err error
+	var cookies tplEntryList
+
+	cookies.Name = "Existing cookies"
+
+	for _, ck := range globalCookieList {
+		cookies.Entries = append(cookies.Entries, tplEntry{Key: ck.Name, Value: ck.Value})
+	}
+	return cookies, err
+}
+
 func collectReqDetails(req *http.Request) (tplEntryList, error) {
 	var err error
 	var dtl tplEntryList

@@ -1,11 +1,12 @@
 {{block "content" .}}
+
 {{ $BGC := .BgColor }}
 <!-- !PAGE CONTENT! -->
 <div class="w3-main" style="margin-left:340px;margin-right:40px">
   <!-- Header -->
   <div class="w3-container" style="margin-top:45px" id="showcase">
     <h1 class="w3-jumbo"><b>{{if .Title}}{{.Title}}{{else}}Section List{{end}}</b></h1>
-    
+
     {{if .Sections}}
       {{ range .Sections }}
         <section>
@@ -24,7 +25,7 @@
     {{end}}
 
   </div>
-
-<!-- End page content -->
 </div>
+<!-- End page content -->
+
 {{end}}

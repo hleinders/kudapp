@@ -10,6 +10,20 @@ type tplEntry struct {
 	Value string
 }
 
+func (t *tplEntry) ShortenKey(length int) string {
+	if len(t.Key) > length {
+		return t.Key[:length-3] + "..."
+	}
+	return t.Key
+}
+
+func (t *tplEntry) ShortenValue(length int) string {
+	if len(t.Value) > length {
+		return t.Value[:length-3] + "..."
+	}
+	return t.Value
+}
+
 type tplEntryList struct {
 	Name    string
 	Entries []tplEntry

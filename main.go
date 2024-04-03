@@ -29,6 +29,7 @@ const (
 	ErrGetHome
 	ErrGetEnvironment
 	ErrGetHeader
+	ErrGetCookies
 	ErrGetSystemStats
 	ErrNetworkStats
 	ErrParseForm
@@ -41,7 +42,7 @@ var (
 	baseTemplate      = "base.tmpl"
 	indexTemplate     = "index.tmpl"
 	validColors       = []string{"amber", "aqua", "blue", "brown", "cyan", "blue", "green", "indigo", "khaki", "lime", "orange", "pink", "purple", "red", "sand", "yellow", "grey"}
-	knownVars         = []string{"VERBOSE", "CREATEINDEX", "DEFAULTCOLOR", "CONTEXTPREFIX", "SERVERPORT", "APPLICATIONNAME", "TEMPLATEDIR", "DOCUMENTROOT"}
+	knownVars         = []string{"VERBOSE", "CREATEINDEX", "DEFAULTCOLOR", "CONTEXTPREFIX", "SERVERPORT", "APPLICATIONNAME", "TEMPLATEDIR", "DOCUMENTROOT", "COOKIES"}
 	globalBackGround  = "red"
 	globalStatusCode  = uint(200)
 	globalServerPort  = "8080"
@@ -66,6 +67,8 @@ var (
 	globalGFCurDeflt         = 3
 	globalGFMaxRuntime       = 5 //max runtime in minutes
 	globalWorkerResult int64 = 0
+	globalCookieList   []*http.Cookie
+	globalAutoValueStr = "auto"
 )
 
 // FlagType is an Object containing all needed flags
@@ -80,6 +83,7 @@ type FlagType struct {
 	environmentPrefix     string
 	templateDir           string
 	documentRoot          string
+	cookieList            string
 }
 
 func usage() {
@@ -177,6 +181,7 @@ func main() {
 	flag.StringVar(&flags.contextPrefix, "context", "", "add `prefix` to any url path")
 	flag.StringVar(&flags.environmentPrefix, "env-prefix", "", "set the `prefix` of the environment vars")
 	flag.StringVar(&flags.defaultColor, "default-color", "red", "default background color")
+	flag.StringVar(&flags.cookieList, "cookies", "", "create response cookie (fmt: `name=value[;name=value]`)")
 	flag.StringVarP(&flags.createConfig, "create-config", "C", "", "write config skeleton to `file`")
 	flag.StringVarP(&flags.templateDir, "template-dir", "T", globalTemplateDir, "use templates from `path`")
 	flag.StringVarP(&flags.documentRoot, "document-root", "D", globalDocRoot, "set document root to `path`")
@@ -197,6 +202,7 @@ func main() {
 	displayErr(vp.BindPFlag("EnvironmentPrefix", flag.Lookup("env-prefix")))
 	displayErr(vp.BindPFlag("DocumentRoot", flag.Lookup("document-root")))
 	displayErr(vp.BindPFlag("TemplateDir", flag.Lookup("template-dir")))
+	displayErr(vp.BindPFlag("Cookies", flag.Lookup("cookies")))
 
 	if flags.help {
 		flag.Usage()
@@ -266,6 +272,21 @@ func main() {
 		check(fmt.Errorf("template dir empty or not found (%s)", noneIfEmpty(globalTemplateDir)), ErrNoTemplateDir)
 	}
 
+	// Add response cookies, if any:
+	tmpCookieList := cleanString(vp.GetString("Cookies"))
+
+	if len(tmpCookieList) > 0 {
+		for _, tmpCookie := range strings.Split(tmpCookieList, ";") {
+			c, err := getCookieFromString(tmpCookie)
+			if err != nil {
+				continue
+			}
+			globalCookieList = append(globalCookieList, &c)
+		}
+
+		prDebug("Cookies: %+v\n", globalCookieList)
+	}
+
 	prInfo("Application %s initialized", globalAppName)
 
 	prVerboseInfo("Settings: Serverport: %s | Extra context: %s",
@@ -293,6 +314,9 @@ func main() {
 
 	http.HandleFunc(globalContext+"/api/setname", apiSetName)
 	http.HandleFunc(globalContext+"/api/setcolor", apiSetColor)
+	http.HandleFunc(globalContext+"/api/setcookies", apiSetCookies)
+	http.HandleFunc(globalContext+"/api/setcookies/create", apiSetCookiesCreate) // hidden
+	http.HandleFunc(globalContext+"/api/setcookies/delete", apiSetCookiesDelete) // hidden
 	http.HandleFunc(globalContext+"/api/setstatus", apiSetCode)
 	http.HandleFunc(globalContext+"/api/togglestatus", apiToggleStatus)
 

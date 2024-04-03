@@ -10,6 +10,21 @@ import (
 	"strconv"
 )
 
+// func alterHandler(h http.HandlerFunc) http.HandlerFunc {
+
+// }
+
+func addResponseCookies(w http.ResponseWriter, req *http.Request) {
+	for _, c := range globalCookieList {
+		if rqc, err := req.Cookie(c.Name); err != nil {
+			http.SetCookie(w, c)
+			prDebug("Set cookie: %s\n", c.Name)
+		} else {
+			prDebug("Found cookie: %s\n", rqc.Name)
+		}
+	}
+}
+
 func createIndexFile() {
 	index, err := template.ParseFiles(getFullPath(globalTemplateDir, indexTemplate))
 	check(err, ErrTemplateParser)
@@ -25,6 +40,8 @@ func createIndexFile() {
 }
 
 func apiHome(w http.ResponseWriter, req *http.Request) {
+	addResponseCookies(w, req)
+
 	home, err := inheritBase("home.tmpl")
 	check(err, ErrTemplateParser)
 
@@ -39,6 +56,8 @@ func apiHome(w http.ResponseWriter, req *http.Request) {
 }
 
 func apiHelp(w http.ResponseWriter, req *http.Request) {
+	addResponseCookies(w, req)
+
 	help, err := inheritBase("help.tmpl")
 	check(err, ErrTemplateParser)
 
@@ -49,6 +68,8 @@ func apiHelp(w http.ResponseWriter, req *http.Request) {
 }
 
 func apiStatus(w http.ResponseWriter, req *http.Request) {
+	addResponseCookies(w, req)
+
 	tmpl, err := inheritBase("status.tmpl")
 	check(err, ErrTemplateParser)
 
@@ -74,6 +95,8 @@ func apiStatus(w http.ResponseWriter, req *http.Request) {
 }
 
 func apiSetName(w http.ResponseWriter, req *http.Request) {
+	addResponseCookies(w, req)
+
 	tmpl, err := inheritBase("set_name.tmpl")
 	check(err, ErrTemplateParser)
 
@@ -104,7 +127,9 @@ func apiSetName(w http.ResponseWriter, req *http.Request) {
 		// all ok, use it:
 		globalAppName = newName
 		statusData.Subtitle = fmt.Sprintf("Current Name: %s", globalAppName)
-		displayErr(tmpl.Execute(w, statusData))
+
+		http.Redirect(w, req, req.URL.Path, http.StatusFound)
+		// displayErr(tmpl.Execute(w, statusData))
 		return
 	}
 
@@ -113,6 +138,8 @@ func apiSetName(w http.ResponseWriter, req *http.Request) {
 }
 
 func apiSetCode(w http.ResponseWriter, req *http.Request) {
+	addResponseCookies(w, req)
+
 	tmpl, err := inheritBase("set_status.tmpl")
 	check(err, ErrTemplateParser)
 
@@ -159,6 +186,8 @@ func apiSetCode(w http.ResponseWriter, req *http.Request) {
 }
 
 func apiToggleStatus(w http.ResponseWriter, req *http.Request) {
+	addResponseCookies(w, req)
+
 	tmpl, err := inheritBase("check.tmpl")
 	check(err, ErrTemplateParser)
 
@@ -177,6 +206,8 @@ func apiToggleStatus(w http.ResponseWriter, req *http.Request) {
 }
 
 func apiSetColor(w http.ResponseWriter, req *http.Request) {
+	addResponseCookies(w, req)
+
 	tmpl, err := inheritBase("set_color.tmpl")
 	check(err, ErrTemplateParser)
 
@@ -218,6 +249,8 @@ func apiSetColor(w http.ResponseWriter, req *http.Request) {
 }
 
 func checkStatus(w http.ResponseWriter, req *http.Request) {
+	addResponseCookies(w, req)
+
 	tmpl, err := inheritBase("check.tmpl")
 	check(err, ErrTemplateParser)
 
@@ -229,6 +262,8 @@ func checkStatus(w http.ResponseWriter, req *http.Request) {
 }
 
 func checkHealthy(w http.ResponseWriter, req *http.Request) {
+	addResponseCookies(w, req)
+
 	var rcode = 200
 
 	tmpl, err := inheritBase("check.tmpl")
@@ -242,6 +277,8 @@ func checkHealthy(w http.ResponseWriter, req *http.Request) {
 }
 
 func checkUnHealthy(w http.ResponseWriter, req *http.Request) {
+	addResponseCookies(w, req)
+
 	var rcode = 500
 
 	tmpl, err := inheritBase("check.tmpl")
@@ -255,6 +292,8 @@ func checkUnHealthy(w http.ResponseWriter, req *http.Request) {
 }
 
 func apiWorkout(w http.ResponseWriter, req *http.Request) {
+	addResponseCookies(w, req)
+
 	tmpl, err := inheritBase("workout.tmpl")
 	check(err, ErrTemplateParser)
 
@@ -314,7 +353,148 @@ func apiWorkout(w http.ResponseWriter, req *http.Request) {
 	displayErr(tmpl.Execute(w, statusData))
 }
 
+func apiSetCookies(w http.ResponseWriter, req *http.Request) {
+	addResponseCookies(w, req)
+
+	tmpl, err := inheritBase("set_cookies.tmpl")
+	check(err, ErrTemplateParser)
+
+	statusData := newTplData("Set Cookies", "menuSetCookies")
+
+	tmpData, err := collectCookies()
+	check(err, ErrGetCookies)
+	statusData.Sections = append(statusData.Sections, tmpData)
+
+	if req.Method == "GET" {
+		statusData.Subtitle = "Handle response cookies"
+		displayErr(tmpl.Execute(w, statusData))
+		return
+	}
+	statusData.Subtitle = fmt.Sprintf("Unknown Method: %s", req.Method)
+	displayErr(tmpl.Execute(w, statusData))
+}
+
+func apiSetCookiesCreate(w http.ResponseWriter, req *http.Request) {
+	addResponseCookies(w, req)
+
+	tmpl, err := inheritBase("set_cookies.tmpl")
+	check(err, ErrTemplateParser)
+
+	statusData := newTplData("Set Cookies", "menuSetCookies")
+
+	tmpData, err := collectCookies()
+	check(err, ErrGetCookies)
+	statusData.Sections = append(statusData.Sections, tmpData)
+
+	if req.Method == "GET" {
+		statusData.Subtitle = "Handle response cookies"
+		displayErr(tmpl.Execute(w, statusData))
+		return
+	} else if req.Method == "POST" {
+		err = req.ParseForm()
+		check(err, ErrParseForm)
+
+		button := req.PostForm.Get("ButtonPressed")
+		if button == "Cancel" {
+			apiHome(w, req)
+			return
+		}
+
+		cookieName := req.PostForm.Get("NewCName")
+		cookieValue := req.PostForm.Get("NewCValue")
+
+		prDebug("Got cookie: %s := %s\n", cookieName, cookieValue)
+		if cookieName = cleanString(cookieName); len(cookieName) == 0 {
+			statusData.Subtitle = "Error: cookie name is empty!"
+			statusData.Content = []string{"Please enter a non empty name"}
+			displayErr(tmpl.Execute(w, statusData))
+			return
+		}
+		if cookieValue = cleanString(cookieValue); len(cookieValue) == 0 {
+			statusData.Subtitle = "Error: cookie value is empty!"
+			statusData.Content = []string{"Please enter a non empty value"}
+			displayErr(tmpl.Execute(w, statusData))
+			return
+		}
+
+		// all ok, use it:
+		if cookieValue == globalAutoValueStr {
+			cookieValue = createCookieAutoValue()
+		}
+		newCookie := http.Cookie{Name: cookieName, Value: cookieValue, Path: globalContext}
+		globalCookieList = append(globalCookieList, &newCookie)
+
+		http.Redirect(w, req, "/api/setcookies", http.StatusFound)
+		// displayErr(tmpl.Execute(w, statusData))
+		return
+	}
+
+	statusData.Subtitle = fmt.Sprintf("Unknown Method: %s", req.Method)
+	displayErr(tmpl.Execute(w, statusData))
+}
+
+func apiSetCookiesDelete(w http.ResponseWriter, req *http.Request) {
+	addResponseCookies(w, req)
+
+	tmpl, err := inheritBase("set_cookies.tmpl")
+	check(err, ErrTemplateParser)
+
+	statusData := newTplData("Set Cookies", "menuSetCookies")
+
+	tmpData, err := collectCookies()
+	check(err, ErrGetCookies)
+	statusData.Sections = append(statusData.Sections, tmpData)
+
+	if req.Method == "GET" {
+		statusData.Subtitle = "Handle response cookies"
+		displayErr(tmpl.Execute(w, statusData))
+		return
+	} else if req.Method == "POST" {
+		err = req.ParseForm()
+		check(err, ErrParseForm)
+
+		button := req.PostForm.Get("ButtonPressed")
+		if button == "Cancel" {
+			apiHome(w, req)
+			return
+		}
+
+		cookies2delete := req.PostForm["cookies2delete"]
+
+		prDebug("Got cookie: %+v\n", cookies2delete)
+		if len(cookies2delete) == 0 {
+			statusData.Subtitle = "Error: no cookie selected!"
+			statusData.Content = []string{"Please select a cookie"}
+			displayErr(tmpl.Execute(w, statusData))
+			return
+		}
+
+		// remove the cookies:
+		for _, name := range cookies2delete {
+			globalCookieList = removeCookieFromList(globalCookieList, name)
+		}
+		// if cookieValue = cleanString(cookieValue); len(cookieValue) == 0 {
+		// 	statusData.Subtitle = "Error: cookie value is empty!"
+		// 	statusData.Content = []string{"Please enter a non empty value"}
+		// 	displayErr(tmpl.Execute(w, statusData))
+		// 	return
+		// }
+
+		// // all ok, use it:
+		// newCookie := http.Cookie{Name: cookieName, Value: cookieValue, Path: "/"}
+		// globalCookieList = append(globalCookieList, &newCookie)
+
+		http.Redirect(w, req, "/api/setcookies", http.StatusFound)
+		return
+	}
+
+	statusData.Subtitle = fmt.Sprintf("Unknown Method: %s", req.Method)
+	displayErr(tmpl.Execute(w, statusData))
+}
+
 func apiDNSQuery(w http.ResponseWriter, req *http.Request) {
+	addResponseCookies(w, req)
+
 	tmpl, err := inheritBase("dns_query.tmpl")
 	check(err, ErrTemplateParser)
 
@@ -362,6 +542,8 @@ func apiDNSQuery(w http.ResponseWriter, req *http.Request) {
 }
 
 func apiKill(w http.ResponseWriter, req *http.Request) {
+	addResponseCookies(w, req)
+
 	kill, err := inheritBase("kill.tmpl")
 	check(err, ErrTemplateParser)
 

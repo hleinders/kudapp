@@ -44,11 +44,17 @@ func GetOsStats() string {
 	return fmt.Sprintf("%s (Arch: %s, CPUs: %d)", runtime.GOOS, runtime.GOARCH, runtime.NumCPU())
 }
 
+func GetHostName() string {
+	hostname, err := os.Hostname()
+	check(err, ErrNetworkStats)
+
+	return hostname
+}
+
 func GetNetStats() string {
 	var slist []string
 
-	hostname, err := os.Hostname()
-	check(err, ErrNetworkStats)
+	hostname := GetHostName()
 
 	interfaces, err := net.InterfaceAddrs()
 	check(err, ErrNetworkStats)
@@ -99,6 +105,51 @@ func noneIfEmpty(str string) string {
 
 	return str
 }
+
+func createCookieAutoValue() string {
+	return strings.ToLower(GetHostName())
+}
+
+// This function parses an string of the form "name=value" to a cookie
+func getCookieFromString(raw string) (http.Cookie, error) {
+	var c http.Cookie
+	var err error
+
+	r := strings.SplitN(raw, "=", 2)
+	if len(r) == 2 {
+		cv := strings.TrimSpace(r[1])
+		if cv == globalAutoValueStr {
+			cv = createCookieAutoValue()
+		}
+		c = http.Cookie{Name: strings.TrimSpace(r[0]), Value: cv, Path: "/"}
+	} else {
+		err = fmt.Errorf("could not parse: %s", raw)
+	}
+
+	return c, err
+}
+
+// This function deletes a cookie with name "name" from a slice of cookies
+func removeCookieFromList(cookieList []*http.Cookie, name string) []*http.Cookie {
+	var result []*http.Cookie
+	var tmp string
+
+	n := strings.ToLower(strings.TrimSpace(name))
+	for _, c := range cookieList {
+		if tmp = strings.ToLower(strings.TrimSpace(c.Name)); tmp != n {
+			result = append(result, c)
+		}
+	}
+	return result
+}
+
+// func shorten(str string, length int) string {
+// 	if len(str) > length {
+// 		return str[:length-3] + "..."
+// 	}
+
+// 	return str
+// }
 
 func cleanString(str string) string {
 	return strings.Trim(strings.Trim(strings.TrimSpace(str), "\""), "'")
