@@ -424,7 +424,9 @@ func apiSetCookiesCreate(w http.ResponseWriter, req *http.Request) {
 		newCookie := http.Cookie{Name: cookieName, Value: cookieValue, Path: globalContext}
 		globalCookieList = append(globalCookieList, &newCookie)
 
-		http.Redirect(w, req, "/api/setcookies", http.StatusFound)
+		http.Redirect(w, req, parentPath(req.URL.Path), http.StatusFound)
+
+		// http.Redirect(w, req, "/api/setcookies", http.StatusFound)
 		// displayErr(tmpl.Execute(w, statusData))
 		return
 	}
@@ -484,7 +486,8 @@ func apiSetCookiesDelete(w http.ResponseWriter, req *http.Request) {
 		// newCookie := http.Cookie{Name: cookieName, Value: cookieValue, Path: "/"}
 		// globalCookieList = append(globalCookieList, &newCookie)
 
-		http.Redirect(w, req, "/api/setcookies", http.StatusFound)
+		http.Redirect(w, req, parentPath(req.URL.Path), http.StatusFound)
+		// http.Redirect(w, req, "/api/setcookies", http.StatusFound)
 		return
 	}
 

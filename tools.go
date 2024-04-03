@@ -169,6 +169,15 @@ func cleanPath(str string) string {
 	return filepath.Clean(cleanString(str))
 }
 
+func parentPath(path string) string {
+	tmp := strings.Split(cleanPath(path), "/")
+	l := len(tmp)
+	if l > 1 {
+		return strings.Join(tmp[:l-1], "/")
+	}
+	return tmp[0]
+}
+
 func cleanIP(addr string) (string, string) {
 	var host, port string
 	var err error
