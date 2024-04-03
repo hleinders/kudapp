@@ -100,6 +100,9 @@ func collectSystem() (tplEntryList, error) {
 
 	sysVars.Entries = append(sysVars.Entries, tplEntry{Key: "Memory", Value: GetMemStats()})
 
+	VersionStr := fmt.Sprintf("%s Version %s", appName, appVersion)
+	sysVars.Entries = append(sysVars.Entries, tplEntry{Key: "App. Version", Value: VersionStr})
+
 	return sysVars, err
 }
 

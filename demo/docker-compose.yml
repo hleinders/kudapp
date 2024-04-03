@@ -1,6 +1,4 @@
-version: '3'
-
-name: "kudapp"
+# version: '3'
 
 networks:
   kudapp:
@@ -21,7 +19,7 @@ services:
 
       # Create global Middlewares (filter) here
       # Redirect ^/$ to Startpage
-      - traefik.http.middlewares.redir_ctx.redirectregex.regex=^((?:https?:\/\/)?[^\/]+)?\/(red|blue|green)\/?$
+      - traefik.http.middlewares.redir_ctx.redirectregex.regex=^((?:https?:\/\/)?[^\/]+)?\/(red|blue|green)\/?$$
       - traefik.http.middlewares.redir_ctx.redirectregex.replacement=$${1}/$${2}/api/home
     environment:
       - TZ="Europe/Berlin"

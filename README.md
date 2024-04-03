@@ -14,37 +14,28 @@ After start up, an instance provides the following URLs (with optional prefix):
 
 - **Startpage: \[/prefix\]/api/home**
   Displays the startpage with a short information summary
-
 - **Status Information: \[/prefix\]/api/status**
   Get some information as seen from 'inside'. This includes all request headers, some system information and all environment variables in the running container
-
-- **Set Appl. Name:  \[/prefix\]/api/setname**
+- **Set Application Name:  \[/prefix\]/api/setname**
   Change the application name.
-
 - **Set Color:  \[/prefix\]/api/setcolor**
   Play with background colors. This may help to distinguish several instances in a pool or backend
-
+- **Set Cookies:  \[/prefix\]/api/setcookies**
+  Create and delete response cookies. Every cookie has the path "/" and is returned to the client as a "Set-Cookie" header, as long as it is not included in the request.
 - **Set Response Code: \[/prefix\]/api/setstatus**
   Set the HTTP response status code to a certain value. This is the value returned by the /check URL
-
 - **Toggle Resp. Code: \[/prefix\]/api/togglestatus**
   Switch the response status code between 200 and 500. This is a shortcut for setting an individual value
-
 - **Health Check: \[/prefix\]/check**
   Get the current response status code (default: 200). Can be set with "Set Status Code" (see above)
-
 - **Always Healthy: \[/prefix\]/check/healthy**
   Always return a response status code of 200
-
 - **Always Unhealthy: \[/prefix\]/check/unhealthy**
   Always return a response status code of 500
-
 - **DNS Query: \[/prefix\]/api/dnsquery**
 Resolves a given domain to test the DNS
-
 - **Workout: \[/prefix\]/api/workout**
 Starts and stops the dummy workout to produce system load
-
 - **Kill Container: \[/prefix\]/api/kill**
 Kills the process (and therefore the container) immediately
 
