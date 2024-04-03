@@ -16,11 +16,8 @@ import (
 
 func addResponseCookies(w http.ResponseWriter, req *http.Request) {
 	for _, c := range globalCookieList {
-		if rqc, err := req.Cookie(c.Name); err != nil {
+		if _, err := req.Cookie(c.Name); err != nil {
 			http.SetCookie(w, c)
-			prDebug("Set cookie: %s\n", c.Name)
-		} else {
-			prDebug("Found cookie: %s\n", rqc.Name)
 		}
 	}
 }
