@@ -8,20 +8,25 @@
         <img src="/img/kudapp_logo_small.png" alt="KuDAPP Logo" style="float:right;width:220px;margin-left:32px;">
         This is a little demo application for Kubernetes or Docker environments.
         It is intended for testing, debugging and learning about elements like services,
-        ingresses, limits and health checks. Of course, the original KUARD has a ton of
+        ingresses, limits and health checks. KuDAPP is heavily inspired by '<b>KUARD</b> - the
+        <a href="https://github.com/kubernetes-up-and-running/kuard" target=_blank>Demo application for
+        Kubernetes Up and Running'</a>. Of course, the original KUARD has a ton of
         additional features, but there's one feature I've always missed:
         the ability to set an arbitrary context path prefix like /foo/bar/home or /extra/context/home,
         so a demo application can be mounted on an ingress' sub path without tinkering on request or
         response headers. That's why I started to write my own 'KUARD'.
     </p>
 
-    <h4>Source Repository:</h4>
+    <h3>Source Projects:</h3>
     <p>
-        You may find all sources for this project on <a href="https://github.com" target="_blank">GitHub</a>:<br>
-        <strong><a href="https://github.com/hleinders/kudapp" target="_blank">https://github.com/hleinders/kudapp</a></strong>
+        You may find all sources for this project on GitHub:
+        <strong><a href="https://github.com/hleinders/kudapp" target="_blank">https://github.com/hleinders/kudapp</a></strong>.
+    </p>
+    <p>
+        A pre-build multi-platform image can be found on Dockerhub: <strong><a href="https://hub.docker.com/r/hleinders/kudapp" target=_blank>hleinders/kudapp</a></strong>.
     </p>
 
-    <h4>Features:</h4>
+    <h2>Features:</h2>
     <p>
         After start up, an instance provides the following URLs (with optional prefix):
         <dl>
@@ -95,19 +100,19 @@
 
     <h4 class="w3-padding-16">Example Configuration File (YAML):</h4>
     <p>
-    <code>
-        AsciiMode: false<br>
-        Verbose: false<br>
-        CreateIndex: false<br>
-        NoColor: false<br>
-        ApplicationName: KuDAPP<br>
-        ContextPrefix: /<br>
-        DefaultColor: red<br>
-        EnvironmentPrefix: KUDAPP<br>
-        ServerPort: "8080"<br>
-        DocumentRoot: ./html<br>
+    <pre>
+        AsciiMode: false
+        Verbose: false
+        CreateIndex: false
+        NoColor: false
+        ApplicationName: KuDAPP
+        ContextPrefix: /
+        DefaultColor: red
+        EnvironmentPrefix: KUDAPP
+        ServerPort: "8080"
+        DocumentRoot: ./html
         TemplateDir: ./templates
-    </code>
+    </pre>
     </p>
     <p>
         The default locations for the configuration file are displayed with "--help"
