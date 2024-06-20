@@ -19,6 +19,7 @@ RUN echo "Building: ${TARGETPLATFORM}"
 COPY build/${TARGETPLATFORM}/kudapp /opt/kudapp/kudapp
 COPY templates /opt/kudapp/templates/
 COPY html /opt/kudapp/html/
+COPY ssl /opt/kudapp/ssl/
 
 RUN chmod 755 /opt/kudapp/kudapp
 

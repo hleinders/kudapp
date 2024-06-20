@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"html/template"
+	"io"
 	"log"
 	"net"
 	"net/http"
@@ -34,6 +35,19 @@ func createIndexFile() {
 	check(err, ErrWriteIndex)
 	defer f.Close()
 	displayErr(index.Execute(f, statusData))
+}
+
+func createRecord(req *http.Request) string {
+	cip, _ := getClientIP(req)
+	return fmt.Sprintf("%s - %s %s %s %s",
+		cip, req.Proto, req.URL.User, req.Method, req.URL.Path)
+}
+
+func LoggingHandler(out io.Writer, hfunc http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		log.Println(createRecord(r))
+		hfunc(w, r)
+	}
 }
 
 func apiHome(w http.ResponseWriter, req *http.Request) {

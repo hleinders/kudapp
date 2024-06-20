@@ -58,6 +58,11 @@ func collectReqDetails(req *http.Request) (tplEntryList, error) {
 		if hport != "" {
 			dtl.Entries = append(dtl.Entries, tplEntry{Key: "Request Port", Value: hport})
 		}
+		proto := "HTTP"
+		if globalUseTLS {
+			proto = "HTTPS"
+		}
+		dtl.Entries = append(dtl.Entries, tplEntry{Key: "Request Protocol", Value: proto})
 	}
 
 	if req.RequestURI != "" {
@@ -100,6 +105,8 @@ func collectSystem() (tplEntryList, error) {
 
 	sysVars.Entries = append(sysVars.Entries, tplEntry{Key: "Memory", Value: GetMemStats()})
 
+	sysVars.Entries = append(sysVars.Entries, tplEntry{Key: "Local Time", Value: GetTimeStats()})
+
 	VersionStr := fmt.Sprintf("%s Version %s", appName, appVersion)
 	sysVars.Entries = append(sysVars.Entries, tplEntry{Key: "App. Version", Value: VersionStr})
 
@@ -141,7 +148,7 @@ func collectHome(req *http.Request) (tplEntryList, error) {
 	homeVars.Entries = append(homeVars.Entries, tplEntry{Key: "Request URL", Value: fullURL})
 	homeVars.Entries = append(homeVars.Entries, tplEntry{Key: "Request Client", Value: cip})
 	homeVars.Entries = append(homeVars.Entries, tplEntry{Key: "Server Host", Value: GetNetStats()})
-	homeVars.Entries = append(homeVars.Entries, tplEntry{Key: "Server Port", Value: globalServerPort})
+	homeVars.Entries = append(homeVars.Entries, tplEntry{Key: "Server Port", Value: fmt.Sprintf("%s (TLS: %t)", globalServerPort, globalUseTLS)})
 	homeVars.Entries = append(homeVars.Entries, tplEntry{Key: "Extra Context", Value: ctx})
 	homeVars.Entries = append(homeVars.Entries, tplEntry{Key: "Memory", Value: GetMemStats()})
 	homeVars.Entries = append(homeVars.Entries, tplEntry{Key: "Time Elapsed", Value: elapsed})

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"net"
 	"net/http"
@@ -11,6 +12,7 @@ import (
 	"runtime"
 	"sort"
 	"strings"
+	"time"
 )
 
 func sortedKeys(m map[string][]string) []string {
@@ -78,6 +80,10 @@ func GetMemStats() string {
 	rstr += fmt.Sprintf("\tNumGC = %v", m.NumGC)
 
 	return rstr
+}
+
+func GetTimeStats() string {
+	return time.Now().Local().Format(time.RFC1123)
 }
 
 func bToMb(b uint64) uint64 {
@@ -198,6 +204,17 @@ func cleanIP(addr string) (string, string) {
 func dirExists(pth string) bool {
 	stat, err := os.Stat(pth)
 	return !os.IsNotExist(err) && stat.IsDir()
+}
+
+func fileExists(name string) (bool, error) {
+	_, err := os.Stat(name)
+	if err == nil {
+		return true, nil
+	}
+	if errors.Is(err, os.ErrNotExist) {
+		return false, nil
+	}
+	return false, err
 }
 
 func getFullPath(base, file string) string {

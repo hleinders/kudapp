@@ -1,0 +1,23 @@
+[req]
+prompt = no
+default_bits = 4096
+distinguished_name = req_distinguished_name
+req_extensions = req_ext
+x509_extensions = v3_req
+
+[req_distinguished_name]
+C = DE
+O = KuDAPP Application
+CN = *.kudapp.nil
+
+[ req_ext ]
+subjectAltName = @alt_names
+
+[v3_req]
+subjectAltName = @alt_names
+
+[alt_names]
+DNS.1 = kudapp.nil
+DNS.2 = *.kudapp.nil
+DNS.3 = localhost
+DNS.4 = localhost.localdomain
